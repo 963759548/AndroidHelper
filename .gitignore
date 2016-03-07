@@ -1,0 +1,12 @@
+# OSX Files
+.DS_Store
+# Project Files
+build
+lib
+manifest.mf
+build.xml
+nbproject
+
+# Runtime Files
+android_helper.config
+transfers
