@@ -1,13 +1,24 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2016 Juan Silva <juanssl@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.tuxedoberries.configuration;
 
 /**
  *
- * @author jsilva
+ * @author Juan Silva
  */
 public class ADBCommands {
     
@@ -31,6 +42,12 @@ public class ADBCommands {
      * The string needs to be formated with the file location
      */
     public static final String SCREEN_RECORD_COMMAND = "shell screenrecord --verbose %s";
+    
+    /**
+     * Command to create a folder in the device
+     * The string needs to be formated with the folder path
+     */
+    public static final String CREATE_FOLDER = "shell mkdir %s";
     
     /**
      * Transfer a file from the device to this computer

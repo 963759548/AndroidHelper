@@ -5,12 +5,11 @@
  */
 package com.tuxedoberries.presentation;
 
+import com.tuxedoberries.androidhelper.ProcessStateController;
 import com.tuxedoberries.process.ProcessController;
 import com.tuxedoberries.configuration.ADBCommands;
 import com.tuxedoberries.configuration.ADBConfiguration;
 import com.tuxedoberries.utils.FileWriter;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import javax.swing.JFileChooser;
 
@@ -19,11 +18,12 @@ import javax.swing.JFileChooser;
  * @author jsilva
  */
 public class MainWindow extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form MainWindows
      */
     public MainWindow() {
+        processStateController = new ProcessStateController();
         initComponents();
         ADBConfiguration.loadConfiguration();
         updateADBView();
@@ -127,35 +127,14 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ADBConfiguration.adbPath = "/Users/jsilva/Library/Android/sdk/platform-tools/adb";
-        
-        if(logWindow == null) {
+        if(!processStateController.isLogcatRunning()) {
             jButton1.setText("Stop");
-            logWindow = new LogWindow(false, true);
-            logWindow.setTitle(ADBConfiguration.adbPath);
-            logWindow.setVisible(true);
-            
-            // Execute
-            if(processController == null) {
-                processController = new ProcessController();
-                String command = ADBConfiguration.buildADBCommand(ADBCommands.LOGCAT_COMMAND);
-                processController.enqueueCommand(command.concat(" -c"));
-                processController.enqueueCommand(command);
-                processController.getLogger().subscribeOutput(logWindow);  
-                processController.getErrorLogger().subscribeOutput(logWindow);  
-            }
+            processStateController.startLogcatCapture();
+            processStateController.startScreenRecord();
         }else{
             jButton1.setText("Start");
-            logWindow.dispose();
-            logWindow = null;
-            processController.stop();
-            processController.getLogger().unsubscribeOutput(logWindow);  
-            processController.getErrorLogger().unsubscribeOutput(logWindow);
-            // Save
-            String log = processController.getLogger().getLog();
-            FileWriter writer = new FileWriter();
-            writer.WriteFile(ADBConfiguration.DEFAULT_DESTINATION_FOLDER.concat("log.txt"), log);
-            processController = null;
+            processStateController.stopLogcatCapture();
+            processStateController.stopScreenRecord();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -193,8 +172,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
-    private LogWindow logWindow;
-    private ProcessController processController;
+    private ProcessStateController processStateController;
     
     private void updateADBView () {
         jTextField2.setText(ADBConfiguration.adbPath);
