@@ -16,6 +16,7 @@
  */
 package com.tuxedoberries.process;
 
+import com.tuxedoberries.mainloop.MainLoop;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +30,6 @@ public class ProcessController implements IExecute {
     private Logger logger;
     private Thread inputThread;
     private Thread errorInputThread;
-    private Thread commandQueueThread;
     private RunnableInputStream runnableInput;
     private RunnableInputStream runnableErrorInput;
     private CommandQueue commandQueue;
@@ -80,7 +80,6 @@ public class ProcessController implements IExecute {
         }
         
         // Execute Command
-        
         executor.executeProcess(data.command, data.environmental);
         
         // Attach Input
@@ -97,22 +96,25 @@ public class ProcessController implements IExecute {
         }
         runnableErrorInput.enableLog(data.enableLog);
         runnableErrorInput.setInputStream(executor.getErrorInput());
-        
     }
     
     private void startInputThread () {
-        if(inputThread == null) {
+        if(runnableInput == null) {
             runnableInput = new RunnableInputStream();
             runnableInput.setProcessStats(executor);
+        }
+        if(inputThread == null) {
             inputThread = new Thread(runnableInput);
             inputThread.start();
         }
     }
     
     private void startErrorInputThread () {
-        if(errorInputThread == null) {
+        if(runnableErrorInput == null) {
             runnableErrorInput = new RunnableInputStream();
             runnableErrorInput.setProcessStats(executor);
+        }
+        if(errorInputThread == null) {
             errorInputThread = new Thread(runnableErrorInput);
             errorInputThread.start();   
         }
@@ -122,9 +124,9 @@ public class ProcessController implements IExecute {
         if(commandQueue == null) {
             commandQueue = new CommandQueue();
             commandQueue.setCommandReceiver(this);
-            commandQueueThread = new Thread(commandQueue);
-            commandQueueThread.start();
         }
+        MainLoop.getLooper().subscribe(commandQueue);
+        MainLoop.start();
     }
     
     @Override
@@ -150,12 +152,8 @@ public class ProcessController implements IExecute {
         }
         
         // Clear Queue
-        if(commandQueueThread != null) {
-            commandQueue.clear();
-            commandQueueThread.interrupt();
-            commandQueueThread = null;
-        }
-        
+        MainLoop.getLooper().unsubscribe(commandQueue);
+        commandQueue.clear();
     }
     
     public IProcessLog getLogger () {

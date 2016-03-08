@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,7 +36,7 @@ public class RunnableInputStream implements Runnable, IProcessLog {
     private BufferedReader reader;
     private Logger logger;
     private StringBuilder historyBuilder;
-    private List<IProcessOutputListener> listeners;
+    private HashSet<IProcessOutputListener> listeners;
     private IProcessStats stats;
     public boolean saveHistory;
     public boolean printLog;
@@ -50,9 +50,9 @@ public class RunnableInputStream implements Runnable, IProcessLog {
     }
     
     public RunnableInputStream (InputStream stream, boolean history, boolean print) {
-        printLog = print;
         saveHistory = history;
-        listeners = new ArrayList<>();
+        printLog = print;
+        listeners = new HashSet<>();
         inputStream = stream;
         updateReader (stream);
     }
@@ -118,10 +118,12 @@ public class RunnableInputStream implements Runnable, IProcessLog {
                     continue;
                 }
                 
-                if(saveHistory)
+                if(saveHistory){
                     appendHistory (line);
-                if(printLog)
-                    System.out.println(String.format("[%d] %s", this.hashCode(), line));
+                }
+                if(printLog){
+                    System.out.println(String.format("%s", line));
+                }
                 raiseOutputEvent(line);
             }
         } catch (IOException ex) {
@@ -140,11 +142,15 @@ public class RunnableInputStream implements Runnable, IProcessLog {
     
     @Override
     public void subscribeOutput(IProcessOutputListener listener) {
+        if(listeners.contains(listener))
+            return;
         listeners.add(listener);
     }
     
     @Override
     public void unsubscribeOutput(IProcessOutputListener listener) {
+        if(!listeners.contains(listener))
+            return;
         listeners.remove(listener);
     }
     
@@ -154,8 +160,8 @@ public class RunnableInputStream implements Runnable, IProcessLog {
     }
     
     private void raiseOutputEvent (String line) {
-        for(int i=0; i<listeners.size(); ++i){
-            listeners.get(i).onNewLine(line);
+        for (IProcessOutputListener listener : listeners) {
+            listener.onNewLine(line);
         }
     }
     

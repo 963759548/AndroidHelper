@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Juan Silva <juanssl@gmail.com>
+ * Copyright (C) 2016 jsilva
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,14 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.tuxedoberries.process;
+package com.tuxedoberries.mainloop;
 
 /**
  *
- * @author Juan Silva
+ * @author jsilva
  */
-public class CommandData {
-    public String command;
-    public String[] environmental;
-    public boolean enableLog = false;
+public interface IUpdate {
+    
+    /**
+     * Update this instance
+     */
+    public void Update();
 }

@@ -35,7 +35,7 @@ public class ADBConfiguration {
     /**
      * Default file name for a screen record
      */
-    public static final String DEFAULT_FILENAME = "screen_record.mp4";
+    public static final String DEFAULT_FILENAME = "screen_record_%d.mp4";
     
     /**
      * Default folder location for a screen record file
@@ -54,17 +54,30 @@ public class ADBConfiguration {
         adbPath = reader.readFile(CONFIG_FILE);
     }
     
+    public static void setAndSaveConfiguration (String path) {
+        adbPath = path;
+        saveConfiguration();
+    }
+    
     public static void saveConfiguration () {
         FileWriter writer = new FileWriter();
         writer.WriteFile(CONFIG_FILE, adbPath);
     }
     
+    public static String getDefaultScreenRecordName() {
+        return getDefaultScreenRecordName(0);
+    }
+    
+    public static String getDefaultScreenRecordName(int number) {
+        return String.format(DEFAULT_FILENAME, number);
+    }
+    
     public static String getDefaultDevicePath () {
-        return DEFAULT_FOLDER_LOCATION.concat(DEFAULT_FILENAME);
+        return DEFAULT_FOLDER_LOCATION.concat(getDefaultScreenRecordName());
     }
     
     public static String getDefaultComputerPath () {
-        return DEFAULT_DESTINATION_FOLDER.concat(DEFAULT_FILENAME);
+        return DEFAULT_DESTINATION_FOLDER.concat(getDefaultScreenRecordName());
     }
     
     public static String buildADBCommand (String command) {

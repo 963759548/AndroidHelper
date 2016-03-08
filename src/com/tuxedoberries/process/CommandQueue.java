@@ -16,16 +16,16 @@
  */
 package com.tuxedoberries.process;
 
+import com.tuxedoberries.mainloop.IUpdate;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
  * @author Juan Silva
  */
-public class CommandQueue implements Runnable {
+public class CommandQueue implements IUpdate {
     
     private Queue<CommandData> commandQueue;
     private IExecute executor;
@@ -57,37 +57,18 @@ public class CommandQueue implements Runnable {
     }
     
     @Override
-    public void run () {
-        while(true) {
-            if(Thread.interrupted())
-                return;
-            
-            if(executor == null) {
-                sleepMe();
-                continue;
-            }
-            
-            if(executor.isRunning()) {
-                sleepMe();
-                continue;
-            }
-            
-            if(queueSize() <= 0) {
-                sleepMe();
-                continue;
-            }
-            
-            CommandData data = dequeue();
-            executor.execute(data);
-        }
-    }
-    
-    private void sleepMe () {
-        try {
-            Thread.sleep(33);
-        } catch (InterruptedException ex) {
-            //logger.log(Level.SEVERE, "Threas is interrupted", ex);
-        }
+    public void Update() {
+        if(executor == null)
+            return;
+
+        if(executor.isRunning())
+            return;
+
+        if(queueSize() <= 0)
+            return;
+
+        CommandData data = dequeue();
+        executor.execute(data);
     }
     
     private void createLogger () {

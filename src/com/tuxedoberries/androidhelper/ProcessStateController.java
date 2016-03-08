@@ -19,7 +19,6 @@ package com.tuxedoberries.androidhelper;
 import com.tuxedoberries.configuration.ADBCommands;
 import com.tuxedoberries.configuration.ADBConfiguration;
 import com.tuxedoberries.presentation.LogWindow;
-import com.tuxedoberries.process.IProcessLog;
 import com.tuxedoberries.process.ProcessController;
 import com.tuxedoberries.utils.FileWriter;
 import java.util.logging.Level;
@@ -35,6 +34,7 @@ public class ProcessStateController {
     private ProcessController screenRecordProcess;
     private Logger logger;
     private LogWindow logcatWindow;
+    private LogWindow screenRecordWindow;
     private final FileWriter fileWriter;
     
     public ProcessStateController () {
@@ -53,6 +53,7 @@ public class ProcessStateController {
             logger.log(Level.INFO, "Logcat is already running");
             return;
         }
+        
         // Open Window
         logcatWindow = new LogWindow(false, true);
         logcatWindow.setTitle("adb logcat");
@@ -100,6 +101,9 @@ public class ProcessStateController {
             logger.log(Level.INFO, "Screen Record is already running");
             return;
         }
+        screenRecordWindow = new LogWindow(false, true);
+        screenRecordWindow.setTitle("adb shell screenrecord");
+        screenRecordWindow.setVisible(true);
         
         // Execute
         screenRecordProcess = new ProcessController();
@@ -107,6 +111,10 @@ public class ProcessStateController {
         String command = ADBConfiguration.getDefaultScreenRecordCommand();
         screenRecordProcess.enqueueCommand(ADBConfiguration.buildADBCommand(createFolder));
         screenRecordProcess.enqueueCommand(ADBConfiguration.buildADBCommand(command));
+        
+        // Subscribe Window
+        screenRecordProcess.getLogger().subscribeOutput(screenRecordWindow);  
+        screenRecordProcess.getErrorLogger().subscribeOutput(screenRecordWindow);
     }
     
     public void stopScreenRecord () {
@@ -118,8 +126,11 @@ public class ProcessStateController {
         // Stop Currents
         screenRecordProcess.stop();
         String command = ADBConfiguration.getDefaultPullCommand();
-        screenRecordProcess.enqueueCommand("sleep 5");
+        screenRecordProcess.enqueueCommand("echo 'Waiting record'");
+        screenRecordProcess.enqueueCommand("sleep 3");
         screenRecordProcess.enqueueCommand(ADBConfiguration.buildADBCommand(command));
+        screenRecordProcess.getLogger().subscribeOutput(screenRecordWindow);  
+        screenRecordProcess.getErrorLogger().subscribeOutput(screenRecordWindow);
     }
     
     private void createLogger () {
