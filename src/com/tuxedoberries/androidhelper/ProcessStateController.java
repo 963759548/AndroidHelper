@@ -19,6 +19,8 @@ package com.tuxedoberries.androidhelper;
 import com.tuxedoberries.configuration.ADBCommands;
 import com.tuxedoberries.configuration.ADBConfiguration;
 import com.tuxedoberries.presentation.LogWindow;
+import com.tuxedoberries.process.IProcessStartListener;
+import com.tuxedoberries.process.IProcessStopListener;
 import com.tuxedoberries.process.ProcessController;
 import com.tuxedoberries.utils.FileWriter;
 import java.util.logging.Level;
@@ -28,7 +30,7 @@ import java.util.logging.Logger;
  *
  * @author Juan Silva
  */
-public class ProcessStateController {
+public class ProcessStateController implements IProcessStartListener, IProcessStopListener {
     
     private ProcessController logcatProcess;
     private ProcessController screenRecordProcess;
@@ -36,6 +38,7 @@ public class ProcessStateController {
     private LogWindow logcatWindow;
     private LogWindow screenRecordWindow;
     private final FileWriter fileWriter;
+    private int videoCount = 0;
     
     public ProcessStateController () {
         createLogger();
@@ -75,19 +78,19 @@ public class ProcessStateController {
             logger.log(Level.INFO, "Logcat is already stopped");
             return;
         }
-        // Dispose Window
-        logcatWindow.dispose();
-        logcatWindow = null;
-        
         // Stop Process
         logcatProcess.stop();
         // Unsubscribe Window
         logcatProcess.getLogger().subscribeOutput(logcatWindow);  
         logcatProcess.getErrorLogger().subscribeOutput(logcatWindow);
         // Save Log
-        String log = logcatProcess.getLogger().getLog();
-        fileWriter.WriteFile(ADBConfiguration.DEFAULT_DESTINATION_FOLDER.concat("log.txt"), log);
+        String log = logcatWindow.getFullText();
+        fileWriter.WriteFile(ADBConfiguration.DEFAULT_DESTINATION_FOLDER.concat("Log.txt"), log);
         logcatProcess = null;
+        
+        // Dispose Window
+        logcatWindow.dispose();
+        logcatWindow = null;
     }
     
     public boolean isScreenRecordRunning () {
@@ -102,19 +105,29 @@ public class ProcessStateController {
             return;
         }
         screenRecordWindow = new LogWindow(false, true);
+        screenRecordWindow.setSize(640, 250);
+        screenRecordWindow.setLocation(screenRecordWindow.getLocation().x, 480);
         screenRecordWindow.setTitle("adb shell screenrecord");
         screenRecordWindow.setVisible(true);
+        
+        // Set some variables
+        videoCount = 0;
         
         // Execute
         screenRecordProcess = new ProcessController();
         String createFolder = String.format(ADBCommands.CREATE_FOLDER, ADBConfiguration.DEFAULT_FOLDER_LOCATION);
-        String command = ADBConfiguration.getDefaultScreenRecordCommand();
-        screenRecordProcess.enqueueCommand(ADBConfiguration.buildADBCommand(createFolder));
-        screenRecordProcess.enqueueCommand(ADBConfiguration.buildADBCommand(command));
+        screenRecordProcess.execute(ADBConfiguration.buildADBCommand(createFolder));
+        for(int i=1; i<=20; ++i) {
+            String command = ADBConfiguration.getDefaultScreenRecordCommand(i);
+            screenRecordProcess.enqueueCommand(ADBConfiguration.buildADBCommand(command));
+            screenRecordProcess.enqueueCommand("sleep 2");
+        }
         
         // Subscribe Window
         screenRecordProcess.getLogger().subscribeOutput(screenRecordWindow);  
         screenRecordProcess.getErrorLogger().subscribeOutput(screenRecordWindow);
+        screenRecordProcess.getObserver().subscribeOnStart(this);
+        screenRecordProcess.getObserver().subscribeOnStop(this);
     }
     
     public void stopScreenRecord () {
@@ -124,13 +137,41 @@ public class ProcessStateController {
         }
         
         // Stop Currents
-        screenRecordProcess.stop();
-        String command = ADBConfiguration.getDefaultPullCommand();
-        screenRecordProcess.enqueueCommand("echo 'Waiting record'");
-        screenRecordProcess.enqueueCommand("sleep 3");
-        screenRecordProcess.enqueueCommand(ADBConfiguration.buildADBCommand(command));
-        screenRecordProcess.getLogger().subscribeOutput(screenRecordWindow);  
-        screenRecordProcess.getErrorLogger().subscribeOutput(screenRecordWindow);
+        screenRecordWindow.onNewLine("Waiting to finish last recording");
+        screenRecordProcess.clearQueue();
+        screenRecordProcess.enqueueCommand("sleep 2");
+        for(int i=1; i<=videoCount; ++i){
+            String pullCommand = ADBConfiguration.getDefaultPullCommand(i);
+            String rmCommand = ADBConfiguration.getDefaultRemoveCommand(i);
+            screenRecordProcess.enqueueCommand(ADBConfiguration.buildADBCommand(pullCommand));
+            screenRecordProcess.enqueueCommand(ADBConfiguration.buildADBCommand(rmCommand));
+            screenRecordProcess.enqueueCommand("sleep 2");
+        }
+    }
+
+    @Override
+    public void onProcessStarted(String process) {
+        if(process.contains(ADBCommands.SCREEN_RECORD_SOLO_COMMAND)){
+            videoCount++;
+        }
+    }
+    
+    @Override
+    public void onProcessStopped(String process) {
+        if(process.contains(ADBCommands.PULL_FILE_SOLO_COMMAND)){
+            --videoCount;
+            if(videoCount <= 0){
+                if(screenRecordWindow != null){
+                    // Save Log
+                    String log = screenRecordWindow.getFullText();
+                    fileWriter.WriteFile(ADBConfiguration.DEFAULT_DESTINATION_FOLDER.concat("ScrenRecordLog.txt"), log);
+
+                    // Dispose Window
+                    screenRecordWindow.dispose();
+                    screenRecordWindow = null;                    
+                }
+            }
+        }
     }
     
     private void createLogger () {
@@ -139,4 +180,5 @@ public class ProcessStateController {
             logger = Logger.getLogger(loggerName);
         }
     }
+
 }

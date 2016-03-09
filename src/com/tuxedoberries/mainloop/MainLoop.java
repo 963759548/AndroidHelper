@@ -40,36 +40,55 @@ public class MainLoop {
     
     private Thread _mainThread;
     private final CoreLoop _coreLoop;
+    private Thread _mainThreadNoSleep;
+    private final CoreLoop _coreLoopNoSleep;
     
     private MainLoop () {
         _coreLoop = new CoreLoop();
+        _coreLoopNoSleep = new CoreLoop(false);
     }
     
     public static void start () {
         MainLoop loop = getInstance();
-        if(loop._mainThread != null)
+        loop.doStart();
+    }
+    
+    private void doStart () {
+        if(_mainThread != null)
             return;
         
         // Start Thread
-        loop._mainThread = new Thread(loop._coreLoop);
-        loop._mainThread.start();
+        _mainThread = new Thread(_coreLoop);
+        _mainThread.start();
+        // Start No Sleep
+        _mainThreadNoSleep = new Thread(_coreLoopNoSleep);
+        _mainThreadNoSleep.start();
     }
     
     public static void stop () {
         MainLoop loop = getInstance();
-        if(loop._mainThread == null)
+        loop.doStop();
+    }
+    
+    private void doStop () {
+        if(_mainThread == null)
             return;
-        if(!loop._mainThread.isAlive()){
-            loop._mainThread = null;
-            return;
-        }
         
-        loop._mainThread.interrupt();
-        loop._mainThread = null;
-        loop._coreLoop.clearSubscribers();
+        // Stop Thread
+        _mainThread.interrupt();
+        _mainThread = null;
+        _coreLoop.clearSubscribers();
+        // Stop No Sleep
+        _mainThreadNoSleep.interrupt();
+        _mainThreadNoSleep = null;
+        _coreLoopNoSleep.clearSubscribers();
     }
     
     public static ILooper getLooper () {
         return getInstance()._coreLoop;
+    }
+    
+    public static ILooper getLooperNoSleep () {
+        return getInstance()._coreLoopNoSleep;
     }
 }

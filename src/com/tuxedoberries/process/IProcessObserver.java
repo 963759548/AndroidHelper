@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Juan Silva <juanssl@gmail.com>
+ * Copyright (C) 2016 jsilva
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,25 +18,31 @@ package com.tuxedoberries.process;
 
 /**
  *
- * @author Juan Silva
+ * @author jsilva
  */
-public interface IProcessStats {
+public interface IProcessObserver {
     
     /**
-     * Determines if the current process is running.
-     * @return true if is running, false otherwise.
+     * Subscribe when the process has just started
+     * @param listener 
      */
-    public boolean isRunning();
+    public void subscribeOnStart(IProcessStartListener listener);
     
     /**
-     * Get the current process in execution if any
-     * @return 
+     * Subscribe then the process has just stopped
+     * @param listener 
      */
-    public String getCurrentProcess();
+    public void subscribeOnStop(IProcessStopListener listener);
     
     /**
-     * Get the last process executed if any
-     * @return 
+     * Unsubscribe when the process has just started
+     * @param listener 
      */
-    public String getLastProcess();
+    public void unsubscribeOnStart(IProcessStartListener listener);
+    
+    /**
+     * Unsubscribe then the process has just stopped
+     * @param listener 
+     */
+    public void unsubscribeOnStop(IProcessStopListener listener);
 }

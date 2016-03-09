@@ -21,7 +21,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,22 +34,19 @@ public class RunnableInputStream implements Runnable, IProcessLog {
     private InputStream inputStream;
     private BufferedReader reader;
     private Logger logger;
-    private StringBuilder historyBuilder;
     private HashSet<IProcessOutputListener> listeners;
     private IProcessStats stats;
-    public boolean saveHistory;
     public boolean printLog;
     
     public RunnableInputStream () {
-        this(null, true, false);
+        this(null, false);
     }
     
     public RunnableInputStream (InputStream stream) {
-        this(stream, true, false);
+        this(stream, false);
     }
     
-    public RunnableInputStream (InputStream stream, boolean history, boolean print) {
-        saveHistory = history;
+    public RunnableInputStream (InputStream stream, boolean print) {
         printLog = print;
         listeners = new HashSet<>();
         inputStream = stream;
@@ -95,7 +91,6 @@ public class RunnableInputStream implements Runnable, IProcessLog {
     @Override
     public void run () {
         createLogger();
-        historyBuilder = new StringBuilder();
         String line;
         try {
             while(true) {
@@ -118,9 +113,6 @@ public class RunnableInputStream implements Runnable, IProcessLog {
                     continue;
                 }
                 
-                if(saveHistory){
-                    appendHistory (line);
-                }
                 if(printLog){
                     System.out.println(String.format("%s", line));
                 }
@@ -130,14 +122,6 @@ public class RunnableInputStream implements Runnable, IProcessLog {
             logger.log(Level.SEVERE, String.format("Exception reading input: %s", ex.toString()));
             logger.log(Level.SEVERE, ExceptionHelper.getTrace(ex));
         }
-    }
-    
-    @Override
-    public synchronized String getLog () {
-        if(historyBuilder != null) {
-            return historyBuilder.toString();
-        }
-        return null;
     }
     
     @Override
@@ -152,11 +136,6 @@ public class RunnableInputStream implements Runnable, IProcessLog {
         if(!listeners.contains(listener))
             return;
         listeners.remove(listener);
-    }
-    
-    private synchronized void appendHistory (String line) {
-        historyBuilder.append(line);
-        historyBuilder.append("\n");
     }
     
     private void raiseOutputEvent (String line) {

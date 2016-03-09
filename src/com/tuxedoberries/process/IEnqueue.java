@@ -18,25 +18,26 @@ package com.tuxedoberries.process;
 
 /**
  *
- * @author Juan Silva
+ * @author jsilva
  */
-public interface IProcessStats {
+public interface IEnqueue {
     
     /**
-     * Determines if the current process is running.
-     * @return true if is running, false otherwise.
+     * Enqueue the command to be executed as soon as the precious process is finished
+     * @param command 
      */
-    public boolean isRunning();
+    public void enqueueCommand(String command);
     
     /**
-     * Get the current process in execution if any
-     * @return 
+     * Enqueue the command to be executed as soon as the precious process is finished
+     * @param command
+     * @param env 
      */
-    public String getCurrentProcess();
+    public void enqueueCommand(String command, String[] env);
     
     /**
-     * Get the last process executed if any
-     * @return 
+     * Enqueue the command to be executed as soon as the precious process is finished
+     * @param data 
      */
-    public String getLastProcess();
+    public void enqueueCommand(CommandData data);
 }

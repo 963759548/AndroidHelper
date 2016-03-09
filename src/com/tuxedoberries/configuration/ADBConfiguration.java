@@ -72,8 +72,16 @@ public class ADBConfiguration {
         return String.format(DEFAULT_FILENAME, number);
     }
     
+    public static String getDefaultDevicePath (int index) {
+        return DEFAULT_FOLDER_LOCATION.concat(getDefaultScreenRecordName(index));
+    }
+    
     public static String getDefaultDevicePath () {
         return DEFAULT_FOLDER_LOCATION.concat(getDefaultScreenRecordName());
+    }
+    
+    public static String getDefaultComputerPath (int index) {
+        return DEFAULT_DESTINATION_FOLDER.concat(getDefaultScreenRecordName(index));
     }
     
     public static String getDefaultComputerPath () {
@@ -84,11 +92,27 @@ public class ADBConfiguration {
         return adbPath.concat(" ").concat(command);
     }
     
+    public static String getDefaultScreenRecordCommand (int index) {
+        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, getDefaultDevicePath(index));
+    }
+    
     public static String getDefaultScreenRecordCommand () {
         return String.format(ADBCommands.SCREEN_RECORD_COMMAND, getDefaultDevicePath());
     }
     
+    public static String getDefaultPullCommand (int index) {
+        return String.format(ADBCommands.PULL_FILE_COMMAND, getDefaultDevicePath(index), getDefaultComputerPath(index));
+    }
+    
     public static String getDefaultPullCommand () {
         return String.format(ADBCommands.PULL_FILE_COMMAND, getDefaultDevicePath(), getDefaultComputerPath());
+    }
+    
+    public static String getDefaultRemoveCommand () {
+        return String.format(ADBCommands.REMOVE_FILE_COMMAND, getDefaultDevicePath());
+    }
+    
+    public static String getDefaultRemoveCommand (int index) {
+        return String.format(ADBCommands.REMOVE_FILE_COMMAND, getDefaultDevicePath(index));
     }
 }

@@ -23,12 +23,6 @@ package com.tuxedoberries.process;
 public interface IProcessLog {
     
     /**
-     * Get the process log.
-     * @return log string
-     */
-    public String getLog ();
-    
-    /**
      * Subscribe to receive each new line of the Process Output.
      * @param listener 
      */

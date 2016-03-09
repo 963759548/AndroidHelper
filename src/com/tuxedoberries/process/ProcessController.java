@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  *
  * @author Juan Silva
  */
-public class ProcessController implements IExecute {
+public class ProcessController implements IExecute, IEnqueue {
     
     private final ProcessExecutor executor;
     private Logger logger;
@@ -33,6 +33,7 @@ public class ProcessController implements IExecute {
     private RunnableInputStream runnableInput;
     private RunnableInputStream runnableErrorInput;
     private CommandQueue commandQueue;
+    private ProcessObserver observer;
     
     public ProcessController () {
         executor = new ProcessExecutor();
@@ -41,12 +42,16 @@ public class ProcessController implements IExecute {
         startInputThread ();
         startErrorInputThread();
         startQueueThread();
+        startDetectorThread();
+        MainLoop.start();
     }
     
+    @Override
     public void enqueueCommand(String command) {
         enqueueCommand(command, null);
     }
     
+    @Override
     public void enqueueCommand(String command, String[] env) {
         CommandData data = new CommandData();
         data.command = command;
@@ -54,6 +59,7 @@ public class ProcessController implements IExecute {
         enqueueCommand(data);
     }
     
+    @Override
     public void enqueueCommand(CommandData data) {
         commandQueue.enqueue(data);
         startQueueThread();
@@ -129,6 +135,14 @@ public class ProcessController implements IExecute {
         MainLoop.start();
     }
     
+    private void startDetectorThread () {
+        if(observer == null) {
+            observer = new ProcessObserver();
+            observer.setProcess(executor);
+        }
+        MainLoop.getLooperNoSleep().subscribe(observer);
+    }
+    
     @Override
     public boolean isRunning () {
         return executor.isRunning();
@@ -156,6 +170,10 @@ public class ProcessController implements IExecute {
         commandQueue.clear();
     }
     
+    public void clearQueue () {
+        commandQueue.clear();
+    }
+    
     public IProcessLog getLogger () {
         return runnableInput;
     }
@@ -166,6 +184,10 @@ public class ProcessController implements IExecute {
     
     public IProcessStats getStats () {
         return executor;
+    }
+    
+    public IProcessObserver getObserver () {
+        return observer;
     }
     
     private void createLogger () {

@@ -50,7 +50,7 @@ public class FileWriter {
             return;
         }
         
-        logger.log(Level.INFO, String.format("Writing data to [%s]", _file.getPath()));
+        System.out.println(String.format("Writing data to: %s", _file.getPath()));
         WriteToFile(content);
         
         CloseBufferedWriter();
@@ -61,7 +61,7 @@ public class FileWriter {
     private boolean CreateFile(String path){
         _file = new File(path);
         if(_file.exists()){
-            logger.log(Level.WARNING, String.format("File already exit. Overwriting file [%s]", _file.getPath()));
+            logger.log(Level.WARNING, String.format("File already exist. Overwriting file [%s]", _file.getPath()));
             return true;
         }
         

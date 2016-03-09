@@ -27,12 +27,23 @@ import java.util.logging.Logger;
  */
 public class CoreLoop implements Runnable, ILooper {
     
-    private static final long TARGET_SLEEP = 42;
     private final HashSet<IUpdate> subscribers;
     private Logger logger;
+    private boolean sleep = true;
+    private long targetSleep = 42;
     
     public CoreLoop () {
+        this(true, 42);
+    }
+    
+    public CoreLoop (boolean sleep) {
+        this(sleep, 42);
+    }
+    
+    public CoreLoop (boolean sleep, long sleepMilis) {
         subscribers = new HashSet<>();
+        this.sleep = sleep;
+        this.targetSleep = sleepMilis;
         createLogger();
     }
     
@@ -41,7 +52,8 @@ public class CoreLoop implements Runnable, ILooper {
         while(true){
             // Update
             triggerUpdate ();
-            sleepMe();
+            if(sleep)
+                sleepMe();
         }
     }
     
@@ -73,7 +85,7 @@ public class CoreLoop implements Runnable, ILooper {
     
     private void sleepMe () {
         try {
-            Thread.sleep(TARGET_SLEEP);
+            Thread.sleep(targetSleep);
         } catch (InterruptedException ex) {
             logger.log(Level.INFO, "Threas is interrupted", ex);
         }

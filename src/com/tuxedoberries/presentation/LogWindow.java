@@ -101,4 +101,8 @@ public class LogWindow extends JFrame implements IProcessOutputListener {
     public void clear () {
         this.jTextArea1.setText("");
     }
+    
+    public String getFullText () {
+        return jTextArea1.getText();
+    }
 }

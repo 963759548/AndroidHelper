@@ -19,6 +19,7 @@ package com.tuxedoberries.process;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,9 +34,11 @@ public class ProcessExecutor implements IProcessStats {
     private InputStream inputStream;
     private InputStream errorInputStream;
     private OutputStream outputStream;
+    private String currentProcess;
+    private final Stack<String> lastProcess;
     
     public ProcessExecutor () {
-        // Nothing here
+        lastProcess = new Stack<>();
     }
     
     public void executeProcess (String command) {
@@ -48,6 +51,8 @@ public class ProcessExecutor implements IProcessStats {
         try {
             Runtime runtime = Runtime.getRuntime();
             process = runtime.exec(command, env);
+            lastProcess.add(command);
+            currentProcess = command;
             createOutputStream();
             createInputStream();
             createErrorInputStream();
@@ -91,9 +96,26 @@ public class ProcessExecutor implements IProcessStats {
         return process.isAlive();
     }
     
+    @Override
+    public String getCurrentProcess() {
+        if(process == null || !process.isAlive())
+            return null;
+        return currentProcess;
+    }
+    
+    @Override
+    public String getLastProcess() {
+        return lastProcess.peek();
+    }
+    
     private void stopCurrentProcess () {
         if(process != null){
             process.destroy();
+            try {
+                process.waitFor();
+            } catch (InterruptedException ex) {
+                logger.log(Level.SEVERE, ex.toString());
+            }
             process = null;
         }
     }
@@ -155,4 +177,5 @@ public class ProcessExecutor implements IProcessStats {
             logger = Logger.getLogger(loggerName);
         }
     }
+
 }

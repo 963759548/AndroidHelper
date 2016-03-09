@@ -18,25 +18,13 @@ package com.tuxedoberries.process;
 
 /**
  *
- * @author Juan Silva
+ * @author jsilva
  */
-public interface IProcessStats {
+public interface IProcessStartListener {
     
     /**
-     * Determines if the current process is running.
-     * @return true if is running, false otherwise.
+     * Executed when the process has just started
+     * @param command Command just started
      */
-    public boolean isRunning();
-    
-    /**
-     * Get the current process in execution if any
-     * @return 
-     */
-    public String getCurrentProcess();
-    
-    /**
-     * Get the last process executed if any
-     * @return 
-     */
-    public String getLastProcess();
+    public void onProcessStarted(String command);
 }

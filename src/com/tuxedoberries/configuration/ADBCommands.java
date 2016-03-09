@@ -38,6 +38,11 @@ public class ADBCommands {
     public static final String LOGCAT_COMMAND = "logcat";
     
     /**
+     * Command to start recording the screen.
+     * This is the solo command, no arguments.
+     */
+    public static final String SCREEN_RECORD_SOLO_COMMAND = "screenrecord";
+    /**
      * Command to start recording the screen
      * The string needs to be formated with the file location
      */
@@ -50,8 +55,20 @@ public class ADBCommands {
     public static final String CREATE_FOLDER = "shell mkdir %s";
     
     /**
+     * Transfer a file from the device to this computer.
+     * This is the solo command, no arguments.
+     */
+    public static final String PULL_FILE_SOLO_COMMAND = "pull";
+    
+    /**
      * Transfer a file from the device to this computer
      * The string needs to be formated with the device file location and this computer target location
      */
     public static final String PULL_FILE_COMMAND = "pull %s %s";
+    
+    /**
+     * Remove a specific file from the device
+     * The string needs to be formated with the device file location
+     */
+    public static final String REMOVE_FILE_COMMAND = "shell rm %s";
 }
