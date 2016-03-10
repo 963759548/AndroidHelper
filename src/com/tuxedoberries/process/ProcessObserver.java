@@ -16,6 +16,10 @@
  */
 package com.tuxedoberries.process;
 
+import com.tuxedoberries.process.interfaces.IProcessStartListener;
+import com.tuxedoberries.process.interfaces.IProcessStats;
+import com.tuxedoberries.process.interfaces.IProcessObserver;
+import com.tuxedoberries.process.interfaces.IProcessStopListener;
 import com.tuxedoberries.mainloop.IUpdate;
 import java.util.HashSet;
 
@@ -40,7 +44,7 @@ public class ProcessObserver implements IUpdate, IProcessObserver {
     }
     
     @Override
-    public void Update() {
+    public void Update(long delta) {
         if(_target == null)
             return;
         

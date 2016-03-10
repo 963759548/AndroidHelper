@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 jsilva
+ * Copyright (C) 2016 Juan Silva <juanssl@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,18 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.tuxedoberries.mainloop;
+package com.tuxedoberries.utils;
 
 /**
  *
- * @author jsilva
+ * @author Juan Silva
  */
-public interface IUpdate {
+public class TextToNumberHelper {
     
-    /**
-     * Update the instance.
-     * Give the delta time to process the last update cycle.
-     * @param delta time that took the last cycle
-     */
-    public void Update(long delta);
+    public static boolean canParseToInt (String text) {
+        try {
+            Integer.parseInt(text);
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+        return true;
+    }
 }

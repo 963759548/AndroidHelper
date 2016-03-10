@@ -14,30 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.tuxedoberries.process;
+package com.tuxedoberries.process.interfaces;
 
 /**
  *
- * @author jsilva
+ * @author Juan Silva
  */
-public interface IEnqueue {
+public interface IProcessEventLog {
     
     /**
-     * Enqueue the command to be executed as soon as the precious process is finished
-     * @param command 
+     * Subscribe to receive each new line of the Process Output.
+     * @param listener 
      */
-    public void enqueueCommand(String command);
+    public void subscribeOutput(IProcessOutputListener listener);
     
     /**
-     * Enqueue the command to be executed as soon as the precious process is finished
-     * @param command
-     * @param env 
+     * Unsubscribe to receive each new line of the Process Output.
+     * @param listener 
      */
-    public void enqueueCommand(String command, String[] env);
-    
-    /**
-     * Enqueue the command to be executed as soon as the precious process is finished
-     * @param data 
-     */
-    public void enqueueCommand(CommandData data);
+    public void unsubscribeOutput(IProcessOutputListener listener);
 }

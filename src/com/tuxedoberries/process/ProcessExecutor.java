@@ -16,6 +16,7 @@
  */
 package com.tuxedoberries.process;
 
+import com.tuxedoberries.process.interfaces.IProcessStats;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -16,9 +16,16 @@
  */
 package com.tuxedoberries.process;
 
+import com.tuxedoberries.process.interfaces.IExecute;
+import com.tuxedoberries.process.interfaces.IProcessStats;
+import com.tuxedoberries.process.interfaces.IProcessObserver;
+import com.tuxedoberries.process.interfaces.IEnqueue;
 import com.tuxedoberries.mainloop.MainLoop;
+import com.tuxedoberries.process.interfaces.ICommandQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.tuxedoberries.process.interfaces.IProcessEventLog;
+import com.tuxedoberries.process.interfaces.IProcessLog;
 
 /**
  *
@@ -34,15 +41,20 @@ public class ProcessController implements IExecute, IEnqueue {
     private RunnableInputStream runnableErrorInput;
     private CommandQueue commandQueue;
     private ProcessObserver observer;
+    private ProcessLog processLog;
     
     public ProcessController () {
         executor = new ProcessExecutor();
         createLogger();
-        
+        startThreads();
+    }
+    
+    private void startThreads () {
         startInputThread ();
         startErrorInputThread();
         startQueueThread();
         startDetectorThread();
+        registerLog();
         MainLoop.start();
     }
     
@@ -85,21 +97,18 @@ public class ProcessController implements IExecute, IEnqueue {
             return;
         }
         
+        startThreads ();
+        // Add to log
+        processLog.startCommand(data.command);
+        
         // Execute Command
         executor.executeProcess(data.command, data.environmental);
         
         // Attach Input
-        if(inputThread == null) {
-            startInputThread();
-        }
         runnableInput.enableLog(data.enableLog);
         runnableInput.setInputStream(executor.getInput());
         
-        
         // Attach Error Input
-        if(errorInputThread == null) {
-            startErrorInputThread();
-        }
         runnableErrorInput.enableLog(data.enableLog);
         runnableErrorInput.setInputStream(executor.getErrorInput());
     }
@@ -143,6 +152,14 @@ public class ProcessController implements IExecute, IEnqueue {
         MainLoop.getLooperNoSleep().subscribe(observer);
     }
     
+    private void registerLog () {
+        if(processLog == null) {
+            processLog = new ProcessLog();
+            runnableInput.subscribeOutput(processLog);
+            runnableErrorInput.subscribeOutput(processLog);
+        }
+    }
+    
     @Override
     public boolean isRunning () {
         return executor.isRunning();
@@ -170,15 +187,15 @@ public class ProcessController implements IExecute, IEnqueue {
         commandQueue.clear();
     }
     
-    public void clearQueue () {
-        commandQueue.clear();
+    public ICommandQueue getQueue () {
+        return commandQueue;
     }
     
-    public IProcessLog getLogger () {
+    public IProcessEventLog getLogger () {
         return runnableInput;
     }
     
-    public IProcessLog getErrorLogger () {
+    public IProcessEventLog getErrorLogger () {
         return runnableErrorInput;
     }
     
@@ -188,6 +205,10 @@ public class ProcessController implements IExecute, IEnqueue {
     
     public IProcessObserver getObserver () {
         return observer;
+    }
+    
+    public IProcessLog getProcessLog () {
+        return processLog;
     }
     
     private void createLogger () {

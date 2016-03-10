@@ -14,17 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.tuxedoberries.process;
+package com.tuxedoberries.process.interfaces;
 
 /**
  *
- * @author jsilva
+ * @author Juan Silva
  */
-public interface IProcessStartListener {
+public interface IProcessStats {
     
     /**
-     * Executed when the process has just started
-     * @param command Command just started
+     * Determines if the current process is running.
+     * @return true if is running, false otherwise.
      */
-    public void onProcessStarted(String command);
+    public boolean isRunning();
+    
+    /**
+     * Get the current process in execution if any
+     * @return 
+     */
+    public String getCurrentProcess();
+    
+    /**
+     * Get the last process executed if any
+     * @return 
+     */
+    public String getLastProcess();
 }

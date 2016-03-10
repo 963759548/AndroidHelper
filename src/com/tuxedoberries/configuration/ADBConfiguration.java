@@ -92,12 +92,16 @@ public class ADBConfiguration {
         return adbPath.concat(" ").concat(command);
     }
     
+    public static String getDefaultScreenRecordCommand (int index, int seconds) {
+        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, seconds, getDefaultDevicePath(index));
+    }
+    
     public static String getDefaultScreenRecordCommand (int index) {
-        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, getDefaultDevicePath(index));
+        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, 180, getDefaultDevicePath(index));
     }
     
     public static String getDefaultScreenRecordCommand () {
-        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, getDefaultDevicePath());
+        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, 180, getDefaultDevicePath());
     }
     
     public static String getDefaultPullCommand (int index) {

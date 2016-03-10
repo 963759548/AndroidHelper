@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 jsilva
+ * Copyright (C) 2016 Juan Silva <juanssl@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author jsilva
+ * @author Juan Silva
  */
 public class CoreLoop implements Runnable, ILooper {
     
@@ -49,19 +49,24 @@ public class CoreLoop implements Runnable, ILooper {
     
     @Override
     public void run () {
+        long currentDelta = 0;
+        long startDelta = 0;
         while(true){
+            startDelta = System.currentTimeMillis();
             // Update
-            triggerUpdate ();
+            triggerUpdate (currentDelta);
             if(sleep)
                 sleepMe();
+            
+            currentDelta = System.currentTimeMillis() - startDelta;
         }
     }
     
-    private synchronized void triggerUpdate () {
+    private synchronized void triggerUpdate (long delta) {
         for (IUpdate subscriber : subscribers) {
             if(subscriber == null)
                 continue;
-            subscriber.Update();
+            subscriber.Update(delta);
         }
     }
     

@@ -14,23 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.tuxedoberries.process;
+package com.tuxedoberries.process.interfaces;
 
 /**
  *
- * @author Juan Silva
+ * @author jsilva
  */
-public interface IProcessLog {
+public interface IProcessStopListener {
     
     /**
-     * Subscribe to receive each new line of the Process Output.
-     * @param listener 
+     * Executed when the process has just stopped
+     * @param process Last process executed
      */
-    public void subscribeOutput(IProcessOutputListener listener);
-    
-    /**
-     * Unsubscribe to receive each new line of the Process Output.
-     * @param listener 
-     */
-    public void unsubscribeOutput(IProcessOutputListener listener);
+    public void onProcessStopped(String process);
 }

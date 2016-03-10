@@ -46,13 +46,19 @@ public class ADBCommands {
      * Command to start recording the screen
      * The string needs to be formated with the file location
      */
-    public static final String SCREEN_RECORD_COMMAND = "shell screenrecord --verbose %s";
+    public static final String SCREEN_RECORD_COMMAND = "shell screenrecord --time-limit %d --verbose %s";
     
     /**
      * Command to create a folder in the device
      * The string needs to be formated with the folder path
      */
     public static final String CREATE_FOLDER = "shell mkdir %s";
+    
+    /**
+     * Command to delete a folder in the device
+     * The string needs to be formated with the folder path
+     */
+    public static final String DELETE_FOLDER = "shell rm -rf %s";
     
     /**
      * Transfer a file from the device to this computer.

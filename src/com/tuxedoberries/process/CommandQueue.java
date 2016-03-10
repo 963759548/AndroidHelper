@@ -16,7 +16,9 @@
  */
 package com.tuxedoberries.process;
 
+import com.tuxedoberries.process.interfaces.IExecute;
 import com.tuxedoberries.mainloop.IUpdate;
+import com.tuxedoberries.process.interfaces.ICommandQueue;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Logger;
@@ -25,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @author Juan Silva
  */
-public class CommandQueue implements IUpdate {
+public class CommandQueue implements IUpdate, ICommandQueue {
     
     private Queue<CommandData> commandQueue;
     private IExecute executor;
@@ -44,6 +46,7 @@ public class CommandQueue implements IUpdate {
         this.executor = executor;
     }
     
+    @Override
     public synchronized void clear () {
         commandQueue.clear();
     }
@@ -52,12 +55,13 @@ public class CommandQueue implements IUpdate {
         return commandQueue.remove();
     }
     
-    private synchronized int queueSize () {
+    @Override
+    public synchronized int queueSize () {
         return commandQueue.size();
     }
     
     @Override
-    public void Update() {
+    public void Update(long delta) {
         if(executor == null)
             return;
 

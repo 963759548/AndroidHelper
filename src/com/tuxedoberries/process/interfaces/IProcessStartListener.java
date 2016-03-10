@@ -14,17 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.tuxedoberries.process;
+package com.tuxedoberries.process.interfaces;
 
 /**
  *
  * @author jsilva
  */
-public interface IProcessStopListener {
+public interface IProcessStartListener {
     
     /**
-     * Executed when the process has just stopped
-     * @param process Last process executed
+     * Executed when the process has just started
+     * @param command Command just started
      */
-    public void onProcessStopped(String process);
+    public void onProcessStarted(String command);
 }

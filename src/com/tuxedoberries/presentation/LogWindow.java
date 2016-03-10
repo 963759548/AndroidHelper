@@ -16,7 +16,7 @@
  */
 package com.tuxedoberries.presentation;
 
-import com.tuxedoberries.process.IProcessOutputListener;
+import com.tuxedoberries.process.interfaces.IProcessOutputListener;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;

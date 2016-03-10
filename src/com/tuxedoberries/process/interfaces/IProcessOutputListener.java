@@ -14,36 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.tuxedoberries.process;
+package com.tuxedoberries.process.interfaces;
 
 /**
  *
  * @author Juan Silva
  */
-public interface IExecute {
+public interface IProcessOutputListener {
     
-    /**
-     * Execute the given command
-     * @param command 
-     */
-    public void execute(String command);
-    
-    /**
-     * Execute the given command with the given environmental variables
-     * @param command
-     * @param env 
-     */
-    public void execute(String command, String[] env);
-    
-    /**
-     * Execute the given command
-     * @param data 
-     */
-    public void execute(CommandData data);
-    
-    /**
-     * Determines if the current process is running.
-     * @return true if is running, false otherwise.
-     */
-    public boolean isRunning();
+    public void onNewLine(String line);
 }
