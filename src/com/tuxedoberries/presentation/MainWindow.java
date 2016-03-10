@@ -7,7 +7,11 @@ package com.tuxedoberries.presentation;
 
 import com.tuxedoberries.androidhelper.LogcatProcessController;
 import com.tuxedoberries.androidhelper.ScreenRecordProcessController;
+import com.tuxedoberries.configuration.ADBCommands;
 import com.tuxedoberries.configuration.ADBConfiguration;
+import com.tuxedoberries.mainloop.IUpdate;
+import com.tuxedoberries.mainloop.MainLoop;
+import com.tuxedoberries.process.interfaces.IProcessStartListener;
 import com.tuxedoberries.process.interfaces.IProcessStopListener;
 import com.tuxedoberries.utils.TextToNumberHelper;
 import java.io.File;
@@ -17,10 +21,12 @@ import javax.swing.JFileChooser;
  *
  * @author jsilva
  */
-public class MainWindow extends javax.swing.JFrame implements IProcessStopListener {
+public class MainWindow extends javax.swing.JFrame implements IProcessStartListener, IProcessStopListener, IUpdate {
     
     private LogcatProcessController logcatProcess;
     private ScreenRecordProcessController screenRecord;
+    private long startedMilis;
+    private boolean screenRunning = false;
     
     /**
      * Creates new form MainWindows
@@ -236,6 +242,8 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStopListen
 
         processStateLabel.setText("Stopped");
 
+        screenRecordProgress.setMaximum(180);
+
         jLabel5.setText("Screen Recording");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -312,11 +320,13 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStopListen
         // Start Logcat if selected
         if(deviceLogCheckBox.isSelected()){
             logcatProcess.startProcess();
+            logcatProcess.getProcess().getObserver().subscribeOnStart(this);
             logcatProcess.getProcess().getObserver().subscribeOnStop(this);
         }
         // Start Record if selected
         if(screenRecordCheckBox.isSelected()){
             screenRecord.startProcess();
+            screenRecord.getProcess().getObserver().subscribeOnStart(this);
             screenRecord.getProcess().getObserver().subscribeOnStop(this);
         }
         
@@ -380,33 +390,37 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStopListen
     }//GEN-LAST:event_showWindowCheckBoxActionPerformed
 
     private void recordTimeSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_recordTimeSliderStateChanged
-        sliderToTextField ();
+        updateRecordTime (recordTimeSlider.getValue());
     }//GEN-LAST:event_recordTimeSliderStateChanged
 
     private void recordTimeTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recordTimeTextFieldActionPerformed
         String text = recordTimeTextField.getText();
         if(!TextToNumberHelper.canParseToInt(text)) {
-            sliderToTextField ();
+            updateRecordTime ();
             return;
         }
         int textValue = Integer.parseInt(text);
-        if(!(0 <= textValue && textValue <= 180)){
-            sliderToTextField ();
+        if(!(0 <= textValue && textValue <= ADBConfiguration.MAX_RECORD_TIME)){
+            updateRecordTime ();
             return;
         }
         
-        recordTimeSlider.setValue(textValue);
-        screenRecord.setRecordTime(textValue);
+        updateRecordTime(textValue);
     }//GEN-LAST:event_recordTimeTextFieldActionPerformed
 
     private void adbTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adbTextFieldActionPerformed
         saveADBPath ();
     }//GEN-LAST:event_adbTextFieldActionPerformed
     
-    private void sliderToTextField () {
-        int sliderValue = recordTimeSlider.getValue();
-        recordTimeTextField.setText(String.format("%d", sliderValue));
-        screenRecord.setRecordTime(sliderValue);
+    private void updateRecordTime() {
+        updateRecordTime (ADBConfiguration.currentRecordTime);
+    }
+    
+    private void updateRecordTime(int time) {
+        ADBConfiguration.currentRecordTime = time;
+        screenRecordProgress.setMaximum(time);
+        recordTimeTextField.setText(String.format("%d", time));
+        recordTimeSlider.setValue(time);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -447,7 +461,22 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStopListen
     }
 
     @Override
+    public void onProcessStarted(String command) {
+        if(command.contains(ADBCommands.SCREEN_RECORD_SOLO_COMMAND)){
+            screenRunning = true;
+            startedMilis = System.currentTimeMillis();
+            MainLoop.getLooper().subscribe(this);
+            MainLoop.start();
+        }
+    }
+    
+    @Override
     public void onProcessStopped(String process) {
+        if(process.contains(ADBCommands.SCREEN_RECORD_SOLO_COMMAND)){
+            screenRunning = false;
+            startedMilis = System.currentTimeMillis();
+        }
+        
         boolean screenReady = !screenRecord.isRunning() && screenRecord.queueCount() <= 0;
         boolean logReady = !logcatProcess.isRunning() && logcatProcess.queueCount() <= 0;
         
@@ -455,8 +484,19 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStopListen
             // Enable all buttons
             setEnableGroup(true);
             startLogButton.setEnabled(true);
-            processStateLabel.setText(" ");
+            processStateLabel.setText("Stopped");
+            screenRecordProgress.setValue(0);
+            MainLoop.getLooper().unsubscribe(this);
         }
     }
-    
+
+    @Override
+    public void Update(long delta) {
+        if(!screenRunning)
+            return;
+        
+        int seconds = (int)(System.currentTimeMillis() - startedMilis)/1000;
+        screenRecordProgress.setValue(seconds);
+    }
+
 }

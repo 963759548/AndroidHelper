@@ -30,7 +30,7 @@ public class ScreenRecordProcessController extends BaseProcessController {
     private static final String WINDOW_TITLE = "adb shell screenrecord";
     private static final String LOG_FILENAME = "Screen_Record_Log.txt";
     private int videoCount = 0;
-    private int recordSeconds = 280;
+    
     @Override
     protected String getWindowTitle() {
         return WINDOW_TITLE;
@@ -39,10 +39,6 @@ public class ScreenRecordProcessController extends BaseProcessController {
     @Override
     protected String getLogFileName() {
         return LOG_FILENAME;
-    }
-    
-    public void setRecordTime(int time) {
-        recordSeconds = time;
     }
 
     @Override
@@ -55,7 +51,7 @@ public class ScreenRecordProcessController extends BaseProcessController {
         // Create Containing Folder
         controller.execute(ADBConfiguration.buildADBCommand(createFolder));
         for(int i=1; i<=20; ++i) {
-            String command = ADBConfiguration.getDefaultScreenRecordCommand(i, recordSeconds);
+            String command = ADBConfiguration.getDefaultScreenRecordCommand(i, ADBConfiguration.currentRecordTime);
             // Execute Record
             controller.enqueueCommand(ADBConfiguration.buildADBCommand(command));
             // Wait a bit for process to properly finish

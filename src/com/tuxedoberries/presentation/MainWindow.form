@@ -353,6 +353,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JProgressBar" name="screenRecordProgress">
+          <Properties>
+            <Property name="maximum" type="int" value="180"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>

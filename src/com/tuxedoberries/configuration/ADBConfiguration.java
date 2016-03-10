@@ -33,6 +33,16 @@ public class ADBConfiguration {
     public static String adbPath = "adb";
     
     /**
+     * Current configured record time
+     */
+    public static int currentRecordTime = 180;
+    
+    /**
+     * Max video record time
+     */
+    public static final int MAX_RECORD_TIME = 180;
+    
+    /**
      * Default file name for a screen record
      */
     public static final String DEFAULT_FILENAME = "screen_record_%d.mp4";
