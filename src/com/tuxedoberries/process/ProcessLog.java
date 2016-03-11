@@ -25,7 +25,7 @@ import com.tuxedoberries.process.interfaces.IProcessOutputListener;
  */
 public class ProcessLog implements IProcessOutputListener, IProcessLog {
     
-    private final StringBuilder builder;
+    private StringBuilder builder;
     
     public ProcessLog () {
         builder = new StringBuilder();
@@ -38,14 +38,18 @@ public class ProcessLog implements IProcessOutputListener, IProcessLog {
     }
     
     public void startCommand (String command) {
-        builder.append("==================================================\n");
+        builder.append("------------------------------------------------\n");
         builder.append(command);
         builder.append("\n");
-        builder.append("==================================================\n");
     }
     
     @Override
     public String getLog() {
         return builder.toString();
+    }
+
+    @Override
+    public void clearLog() {
+        builder = new StringBuilder();
     }
 }

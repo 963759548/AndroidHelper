@@ -32,10 +32,10 @@ import java.util.logging.Logger;
 public abstract class BaseProcessController implements IProcessStartListener, IProcessStopListener {
     
     private final ProcessController processController;
-    private Logger logger;
+    protected Logger logger;
     protected LogWindow logWindow;
-    private final FileWriter fileWriter;
-    private boolean showWindow = true;
+    protected final FileWriter fileWriter;
+    protected boolean showWindow = true;
     
     public BaseProcessController () {
         fileWriter  = new FileWriter();
@@ -92,7 +92,7 @@ public abstract class BaseProcessController implements IProcessStartListener, IP
     
     public final void stopProcess() {
         if(!isRunning()){
-            logger.log(Level.INFO, "Logcat is already stopped");
+            //logger.log(Level.INFO, "Logcat is already stopped");
             return;
         }
         
@@ -109,14 +109,16 @@ public abstract class BaseProcessController implements IProcessStartListener, IP
     public final void onProcessStopped(String process) {
         processStoppedProcess(process);
         if(processController.getQueue().queueSize() <= 0){
-            // Stop Process
-            if(processController.isRunning()){
-                processController.stop();                
-            }
-
             // Unsubscribe Window
             processController.getLogger().unsubscribeOutput(logWindow);  
             processController.getErrorLogger().unsubscribeOutput(logWindow);
+            
+            // Try to wait until the log is finished
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex){
+                
+            }
             // Save Log
             saveLog( getLogFileName() );
 
@@ -140,9 +142,10 @@ public abstract class BaseProcessController implements IProcessStartListener, IP
      * Save the log of the process into the given file
      * @param logfile 
      */
-    private void saveLog (String logfile) {
+    protected void saveLog (String logfile) {
         String log = processController.getProcessLog().getLog();
         fileWriter.WriteFile(ADBConfiguration.DEFAULT_DESTINATION_FOLDER.concat(logfile), log);
+        processController.getProcessLog().clearLog();
     }
     
     private void createLogger () {

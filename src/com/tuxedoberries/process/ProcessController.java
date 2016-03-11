@@ -162,7 +162,7 @@ public class ProcessController implements IExecute, IEnqueue {
     
     @Override
     public boolean isRunning () {
-        return executor.isRunning();
+        return executor.isRunning() || runnableInput.isReading() || runnableErrorInput.isReading();
     }
     
     public void stop () {

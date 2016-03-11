@@ -27,4 +27,9 @@ public interface IProcessLog {
      * @return Log
      */
     public String getLog();
+    
+    /**
+     * Clear the saved log
+     */
+    public void clearLog();
 }

@@ -40,6 +40,7 @@ public class RunnableInputStream implements Runnable, IProcessEventLog {
     private HashSet<IProcessOutputListener> listeners;
     private IProcessStats stats;
     public boolean printLog;
+    private boolean reading = false;
     
     public RunnableInputStream () {
         this(null, false);
@@ -69,6 +70,10 @@ public class RunnableInputStream implements Runnable, IProcessEventLog {
         updateReader (stream);
     }
     
+    public boolean isReading () {
+        return reading;
+    }
+    
     private synchronized void updateReader (InputStream stream) {
         if(inputStream == null)
             return;
@@ -82,12 +87,12 @@ public class RunnableInputStream implements Runnable, IProcessEventLog {
         String line = null;
         try{
             line = reader.readLine();
+            reading = true;
         }catch(IOException e){
             // Input closed
             reader = null;
             inputStream = null;
         }
-
         return line;
     }
     
@@ -97,21 +102,20 @@ public class RunnableInputStream implements Runnable, IProcessEventLog {
         String line;
         try {
             while(true) {
-                if(stats == null || !stats.isRunning()) {
-                    sleepMe();
-                    continue;
-                }
                 if(inputStream == null) {
+                    reading = false;
                     sleepMe();
                     continue;
                 }
                 if(reader == null){
+                    reading = false;
                     sleepMe();
                     continue;
                 }
                 
                 line = readLine();
                 if(line == null){
+                    reading = false;
                     sleepMe();
                     continue;
                 }
@@ -128,20 +132,20 @@ public class RunnableInputStream implements Runnable, IProcessEventLog {
     }
     
     @Override
-    public void subscribeOutput(IProcessOutputListener listener) {
+    public synchronized void subscribeOutput(IProcessOutputListener listener) {
         if(listeners.contains(listener))
             return;
         listeners.add(listener);
     }
     
     @Override
-    public void unsubscribeOutput(IProcessOutputListener listener) {
+    public synchronized void unsubscribeOutput(IProcessOutputListener listener) {
         if(!listeners.contains(listener))
             return;
         listeners.remove(listener);
     }
     
-    private void raiseOutputEvent (String line) {
+    private synchronized void raiseOutputEvent (String line) {
         for (IProcessOutputListener listener : listeners) {
             listener.onNewLine(line);
         }

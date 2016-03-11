@@ -77,4 +77,14 @@ public class ADBCommands {
      * The string needs to be formated with the device file location
      */
     public static final String REMOVE_FILE_COMMAND = "shell rm %s";
+    
+    /**
+     * Get the devices properties
+     */
+    public static final String DEVICE_PROPERTIES = "shell getprop";
+    
+    /**
+     * Get all the information of the system
+     */
+    public static final String DUMP_SYSTEM_INFORMATION = "shell dumpsys";
 }

@@ -5,6 +5,7 @@
  */
 package com.tuxedoberries.presentation;
 
+import com.tuxedoberries.androidhelper.DeviceInformationProcessController;
 import com.tuxedoberries.androidhelper.LogcatProcessController;
 import com.tuxedoberries.androidhelper.ScreenRecordProcessController;
 import com.tuxedoberries.configuration.ADBCommands;
@@ -23,8 +24,9 @@ import javax.swing.JFileChooser;
  */
 public class MainWindow extends javax.swing.JFrame implements IProcessStartListener, IProcessStopListener, IUpdate {
     
-    private LogcatProcessController logcatProcess;
-    private ScreenRecordProcessController screenRecord;
+    private final LogcatProcessController logcatProcess;
+    private final ScreenRecordProcessController screenRecord;
+    private final DeviceInformationProcessController infoProcess;
     private long startedMilis;
     private boolean screenRunning = false;
     
@@ -34,6 +36,7 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
     public MainWindow() {
         logcatProcess = new LogcatProcessController();
         screenRecord = new ScreenRecordProcessController();
+        infoProcess = new DeviceInformationProcessController();
         
         initComponents();
         ADBConfiguration.loadConfiguration();
@@ -66,6 +69,7 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
         screenRecordCheckBox = new javax.swing.JCheckBox();
         showWindowCheckBox = new javax.swing.JCheckBox();
         startLogButton = new javax.swing.JButton();
+        deviceInfoCheckBox = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         processStateLabel = new javax.swing.JLabel();
         screenRecordProgress = new javax.swing.JProgressBar();
@@ -159,12 +163,10 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
         screenRecordPanelLayout.setHorizontalGroup(
             screenRecordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(screenRecordPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(screenRecordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, screenRecordPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(recordTimeSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(recordTimeSlider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(screenRecordPanelLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(screenRecordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addGroup(screenRecordPanelLayout.createSequentialGroup()
@@ -213,18 +215,25 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
             }
         });
 
+        deviceInfoCheckBox.setSelected(true);
+        deviceInfoCheckBox.setText("Enable Device Info");
+
         javax.swing.GroupLayout logPanelLayout = new javax.swing.GroupLayout(logPanel);
         logPanel.setLayout(logPanelLayout);
         logPanelLayout.setHorizontalGroup(
             logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, logPanelLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(screenRecordCheckBox)
-                        .addComponent(deviceLogCheckBox)
-                        .addComponent(showWindowCheckBox))
-                    .addComponent(startLogButton, javax.swing.GroupLayout.Alignment.TRAILING)))
+                .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(logPanelLayout.createSequentialGroup()
+                        .addComponent(deviceInfoCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(screenRecordCheckBox)
+                            .addComponent(deviceLogCheckBox)
+                            .addComponent(showWindowCheckBox))
+                        .addComponent(startLogButton, javax.swing.GroupLayout.Alignment.TRAILING))))
         );
         logPanelLayout.setVerticalGroup(
             logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -233,8 +242,10 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(screenRecordCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(deviceInfoCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(showWindowCheckBox)
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(startLogButton))
         );
 
@@ -294,11 +305,11 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
                 .addComponent(adbPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(screenRecordPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(logPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(logPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(screenRecordPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -329,6 +340,12 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
             screenRecord.getProcess().getObserver().subscribeOnStart(this);
             screenRecord.getProcess().getObserver().subscribeOnStop(this);
         }
+        // Start Device Information if selected
+        if(deviceInfoCheckBox.isSelected()) {
+            infoProcess.startProcess();
+            infoProcess.getProcess().getObserver().subscribeOnStart(this);
+            infoProcess.getProcess().getObserver().subscribeOnStop(this);
+        }
         
         // Disable Components
         setEnableGroup(false);
@@ -347,6 +364,10 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
         // Stop Record if selected
         if(screenRecordCheckBox.isSelected()){
             screenRecord.stopProcess();
+        }
+        // Stop Record if selected
+        if(deviceInfoCheckBox.isSelected()){
+            infoProcess.stopProcess();
         }
     }
     
@@ -383,9 +404,11 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
         if(showWindowCheckBox.isSelected()) {
             logcatProcess.showLogWindow(true);
             screenRecord.showLogWindow(true);
+            infoProcess.showLogWindow(true);
         } else {
             logcatProcess.showLogWindow(false);
             screenRecord.showLogWindow(false);
+            infoProcess.showLogWindow(false);
         }
     }//GEN-LAST:event_showWindowCheckBoxActionPerformed
 
@@ -428,6 +451,7 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
     private javax.swing.JPanel adbPanel;
     private javax.swing.JButton adbSaveConfig;
     private javax.swing.JTextField adbTextField;
+    private javax.swing.JCheckBox deviceInfoCheckBox;
     private javax.swing.JCheckBox deviceLogCheckBox;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
@@ -457,7 +481,7 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
     }
     
     private boolean areProcessRunning () {
-        return logcatProcess.isRunning() || screenRecord.isRunning();
+        return logcatProcess.isRunning() || screenRecord.isRunning() || infoProcess.isRunning();
     }
 
     @Override
@@ -479,8 +503,9 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
         
         boolean screenReady = !screenRecord.isRunning() && screenRecord.queueCount() <= 0;
         boolean logReady = !logcatProcess.isRunning() && logcatProcess.queueCount() <= 0;
+        boolean infoReady = !infoProcess.isRunning() && infoProcess.queueCount() <= 0;
         
-        if(screenReady && logReady){
+        if(screenReady && logReady && infoReady){
             // Enable all buttons
             setEnableGroup(true);
             startLogButton.setEnabled(true);
