@@ -65,20 +65,30 @@ public class DeviceInformation {
         
         builder.append("OS Version:\t");
         builder.append(OSVersion);
-        builder.append("\n");
+        builder.append("\n\n");
         
-        builder.append("Total RAM:\t");
-        builder.append(RAM);
-        builder.append("\n");
+//        builder.append("Total RAM:\t");
+//        builder.append(RAM);
+//        builder.append("\n");
+//        
+//        builder.append("GPU Info:\t");
+//        builder.append(GPUInformation);
+//        builder.append("\n");
+//        
+//        builder.append("Screen Size:\t");
+//        builder.append(ScreenWidth);
+//        builder.append(" x ");
+//        builder.append(ScreenHeight);
+//        builder.append("\n\n");
         
-        builder.append("GPU Info:\t");
-        builder.append(GPUInformation);
-        builder.append("\n");
+        builder.append("Platform Information: \t");
+        String platformInfo = "http://system-on-a-chip.specout.com/?launch_filters=%5B%7B%22field%22%3A%22manufact_series_model_pregen%22%2C%22operator%22%3A%22LIKE%22%2C%22value%22%3A%22"+Platform+"%22%7D%5D&sort=__WEIGHT_DEFAULT:DESC";
+        builder.append(platformInfo);
+        builder.append("\n\n");
         
-        builder.append("Screen Size:\t");
-        builder.append(ScreenWidth);
-        builder.append(" x ");
-        builder.append(ScreenHeight);
+        builder.append("Model Information: \t");
+        String modelInfo = "http://www.gsmarena.com/results.php3?sQuickSearch=yes&sName="+Model.replace(" ", "+");
+        builder.append(modelInfo);
         builder.append("\n");
         
         return builder.toString();

@@ -504,12 +504,16 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
         boolean screenReady = !screenRecord.isRunning() && screenRecord.queueCount() <= 0;
         boolean logReady = !logcatProcess.isRunning() && logcatProcess.queueCount() <= 0;
         boolean infoReady = !infoProcess.isRunning() && infoProcess.queueCount() <= 0;
+        System.out.println(String.format("Screen: %s", screenReady));
+        System.out.println(String.format("Log: %s", logReady));
+        System.out.println(String.format("Info: %s", infoReady));
         
         if(screenReady && logReady && infoReady){
             // Enable all buttons
             setEnableGroup(true);
             startLogButton.setEnabled(true);
             processStateLabel.setText("Stopped");
+            startLogButton.setText("Start");
             screenRecordProgress.setValue(0);
             MainLoop.getLooper().unsubscribe(this);
         }
