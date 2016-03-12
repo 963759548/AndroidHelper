@@ -388,6 +388,7 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
         // Processes
         deviceLogCheckBox.setEnabled(enable);
         screenRecordCheckBox.setEnabled(enable);
+        deviceInfoCheckBox.setEnabled(enable);
         // Time
         recordTimeSlider.setEnabled(enable);
         recordTimeTextField.setEnabled(enable);

@@ -29,8 +29,8 @@ import java.nio.file.Paths;
 public class DeviceInformationProcessController extends BaseProcessController {
     
     private static final String WINDOW_TITLE = "adb getprop";
-    private static final String LOG_FILENAME = "Full_Device_Information.txt";
-    private static final String SUMARY_LOG_FILENAME = "Device_Information.txt";
+    private static final String LOG_FILENAME = "Full Device Information.txt";
+    private static final String SUMARY_LOG_FILENAME = "Device Information.txt";
     private DeviceInformation deviceInfo;
     
     @Override

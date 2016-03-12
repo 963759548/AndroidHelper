@@ -27,7 +27,7 @@ import com.tuxedoberries.process.ProcessController;
 public class LogcatProcessController extends BaseProcessController {
 
     private static final String WINDOW_TITLE = "adb logcat";
-    private static final String LOG_FILENAME = "Logcat.txt";
+    private static final String LOG_FILENAME = "Device Log.txt";
     
     @Override
     protected String getWindowTitle() {

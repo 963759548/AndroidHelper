@@ -10,3 +10,4 @@ nbproject
 # Runtime Files
 android_helper.config
 transfers
+/dist/

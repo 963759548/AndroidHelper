@@ -28,7 +28,7 @@ import com.tuxedoberries.process.ProcessController;
 public class ScreenRecordProcessController extends BaseProcessController {
 
     private static final String WINDOW_TITLE = "adb shell screenrecord";
-    private static final String LOG_FILENAME = "Screen_Record_Log.txt";
+    private static final String LOG_FILENAME = "Screen Record Log.txt";
     private int videoCount = 0;
     
     @Override
