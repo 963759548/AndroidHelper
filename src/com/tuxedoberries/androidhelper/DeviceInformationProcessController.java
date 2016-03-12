@@ -51,11 +51,9 @@ public class DeviceInformationProcessController extends BaseProcessController {
         deviceInfo.Clear();
         
         String devProps = ADBConfiguration.buildADBCommand(ADBCommands.DEVICE_PROPERTIES);
-        //String sysDump = ADBConfiguration.buildADBCommand(ADBCommands.DUMP_SYSTEM_INFORMATION);
         ProcessController controller = getProcessController();
         // Start Device Properties
         controller.enqueueCommand(devProps);
-        //controller.enqueueCommand(sysDump);
     }
 
     @Override
@@ -135,34 +133,7 @@ public class DeviceInformationProcessController extends BaseProcessController {
             result = result.replace("[", "");
             result = result.replace("]", "");
             deviceInfo.OSVersion = result.toUpperCase().trim();
-            return;
         }
         
-//        // GPU
-//        if(line.contains("GLES: ")) {
-//            String result = line.replace("GLES: ", "");
-//            deviceInfo.GPUInformation = result.toUpperCase().trim();
-//            return;
-//        }
-//        
-//        // Total RAM
-//        if(line.contains("Total RAM:")) {
-//            String result = line.replace("Total RAM:", "");
-//            deviceInfo.RAM = result.toUpperCase().trim();
-//            return;
-//        }
-//        
-//        // Screen Width
-//        if(line.contains("SurfaceWidth:")) {
-//            String result = line.replace("SurfaceWidth:", "");
-//            deviceInfo.ScreenWidth = result.toUpperCase().trim();
-//            return;
-//        }
-//        
-//        // Screen Height
-//        if(line.contains("SurfaceHeight:")) {
-//            String result = line.replace("SurfaceHeight:", "");
-//            deviceInfo.ScreenHeight = result.toUpperCase().trim();
-//        }
     }
 }

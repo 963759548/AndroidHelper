@@ -20,7 +20,7 @@ import com.tuxedoberries.process.CommandData;
 
 /**
  *
- * @author jsilva
+ * @author Juan Silva
  */
 public interface IEnqueue {
     

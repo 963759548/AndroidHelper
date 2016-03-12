@@ -18,7 +18,7 @@ package com.tuxedoberries.process.interfaces;
 
 /**
  *
- * @author jsilva
+ * @author Juan Silva
  */
 public interface IProcessStopListener {
     

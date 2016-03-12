@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 jsilva
+ * Copyright (C) 2016 Juan Silva <juanssl@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ package com.tuxedoberries.process.interfaces;
 
 /**
  *
- * @author jsilva
+ * @author Juan Silva
  */
 public interface IProcessObserver {
     
