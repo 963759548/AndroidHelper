@@ -18,6 +18,8 @@ package com.tuxedoberries.configuration;
 
 import com.tuxedoberries.utils.FileReader;
 import com.tuxedoberries.utils.FileWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
@@ -55,7 +57,7 @@ public class ADBConfiguration {
     /**
      * Computer default destination folder
      */
-    public static final String DEFAULT_DESTINATION_FOLDER = "./transfers/";
+    public static final String DEFAULT_DESTINATION_FOLDER = "transfers";
     
     public static void loadConfiguration () {
         FileReader reader = new FileReader();
@@ -91,11 +93,13 @@ public class ADBConfiguration {
     }
     
     public static String getDefaultComputerPath (int index) {
-        return DEFAULT_DESTINATION_FOLDER.concat(getDefaultScreenRecordName(index));
+        Path path = Paths.get(DEFAULT_DESTINATION_FOLDER, getDefaultScreenRecordName(index));
+        return path.toString();
     }
     
     public static String getDefaultComputerPath () {
-        return DEFAULT_DESTINATION_FOLDER.concat(getDefaultScreenRecordName());
+        Path path = Paths.get(DEFAULT_DESTINATION_FOLDER, getDefaultScreenRecordName());
+        return path.toString();
     }
     
     public static String buildADBCommand (String command) {

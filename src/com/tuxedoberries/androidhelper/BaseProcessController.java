@@ -22,6 +22,8 @@ import com.tuxedoberries.process.ProcessController;
 import com.tuxedoberries.process.interfaces.IProcessStartListener;
 import com.tuxedoberries.process.interfaces.IProcessStopListener;
 import com.tuxedoberries.utils.FileWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -144,7 +146,9 @@ public abstract class BaseProcessController implements IProcessStartListener, IP
      */
     protected void saveLog (String logfile) {
         String log = processController.getProcessLog().getLog();
-        fileWriter.WriteFile(ADBConfiguration.DEFAULT_DESTINATION_FOLDER.concat(logfile), log);
+        
+        Path path = Paths.get(ADBConfiguration.DEFAULT_DESTINATION_FOLDER, logfile);
+        fileWriter.WriteFile(path.toString(), log);
         processController.getProcessLog().clearLog();
     }
     

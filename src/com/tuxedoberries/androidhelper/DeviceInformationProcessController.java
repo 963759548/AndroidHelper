@@ -19,6 +19,8 @@ package com.tuxedoberries.androidhelper;
 import com.tuxedoberries.configuration.ADBCommands;
 import com.tuxedoberries.configuration.ADBConfiguration;
 import com.tuxedoberries.process.ProcessController;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
@@ -79,7 +81,9 @@ public class DeviceInformationProcessController extends BaseProcessController {
         
         builder.append("Device Information\n");
         builder.append(deviceInfo.toString());
-        fileWriter.WriteFile(ADBConfiguration.DEFAULT_DESTINATION_FOLDER.concat(SUMARY_LOG_FILENAME), builder.toString());
+        
+        Path path = Paths.get(ADBConfiguration.DEFAULT_DESTINATION_FOLDER, SUMARY_LOG_FILENAME);
+        fileWriter.WriteFile(path.toString(), builder.toString());
         super.saveLog(logfile);
     }
     

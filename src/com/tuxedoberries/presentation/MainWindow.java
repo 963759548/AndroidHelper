@@ -174,8 +174,7 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(recordTimeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         screenRecordPanelLayout.setVerticalGroup(
             screenRecordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,12 +195,15 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
 
         deviceLogCheckBox.setSelected(true);
         deviceLogCheckBox.setText("Enable Device Log");
+        deviceLogCheckBox.setToolTipText("Record the log from the device.");
 
         screenRecordCheckBox.setSelected(true);
         screenRecordCheckBox.setText("Enable Screen Record");
+        screenRecordCheckBox.setToolTipText("Record the display of the device while testing. Set the time limit of the record from 0 to 180 seconds.");
 
         showWindowCheckBox.setSelected(true);
         showWindowCheckBox.setText("Show Window");
+        showWindowCheckBox.setToolTipText("Show the windows of each process.");
         showWindowCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showWindowCheckBoxActionPerformed(evt);
@@ -217,6 +219,7 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
 
         deviceInfoCheckBox.setSelected(true);
         deviceInfoCheckBox.setText("Enable Device Info");
+        deviceInfoCheckBox.setToolTipText("Gather the general information of the device.");
 
         javax.swing.GroupLayout logPanelLayout = new javax.swing.GroupLayout(logPanel);
         logPanel.setLayout(logPanelLayout);
@@ -224,16 +227,15 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
             logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, logPanelLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(startLogButton))
+            .addGroup(logPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(logPanelLayout.createSequentialGroup()
-                        .addComponent(deviceInfoCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(screenRecordCheckBox)
-                            .addComponent(deviceLogCheckBox)
-                            .addComponent(showWindowCheckBox))
-                        .addComponent(startLogButton, javax.swing.GroupLayout.Alignment.TRAILING))))
+                    .addComponent(screenRecordCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(showWindowCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deviceInfoCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deviceLogCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         logPanelLayout.setVerticalGroup(
             logPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -243,9 +245,9 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
                 .addComponent(screenRecordCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deviceInfoCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(showWindowCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(showWindowCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(startLogButton))
         );
 
@@ -268,7 +270,7 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)
-                        .addComponent(screenRecordProgress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(screenRecordProgress, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -290,12 +292,12 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(adbPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(screenRecordPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(screenRecordPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(logPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(logPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -504,9 +506,6 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
         boolean screenReady = !screenRecord.isRunning() && screenRecord.queueCount() <= 0;
         boolean logReady = !logcatProcess.isRunning() && logcatProcess.queueCount() <= 0;
         boolean infoReady = !infoProcess.isRunning() && infoProcess.queueCount() <= 0;
-        System.out.println(String.format("Screen: %s", screenReady));
-        System.out.println(String.format("Log: %s", logReady));
-        System.out.println(String.format("Info: %s", infoReady));
         
         if(screenReady && logReady && infoReady){
             // Enable all buttons

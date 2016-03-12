@@ -33,12 +33,12 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jPanel1" max="32767" attributes="0"/>
                   <Component id="adbPanel" max="32767" attributes="0"/>
-                  <Group type="102" attributes="0">
-                      <Component id="screenRecordPanel" max="32767" attributes="0"/>
+                  <Component id="jPanel1" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="screenRecordPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="logPanel" min="-2" max="-2" attributes="0"/>
+                      <Component id="logPanel" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -173,7 +173,6 @@
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -245,20 +244,17 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <Component id="startLogButton" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="deviceInfoCheckBox" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                              <Component id="screenRecordCheckBox" min="-2" max="-2" attributes="0"/>
-                              <Component id="deviceLogCheckBox" min="-2" max="-2" attributes="0"/>
-                              <Component id="showWindowCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="startLogButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="screenRecordCheckBox" alignment="0" max="32767" attributes="0"/>
+                      <Component id="showWindowCheckBox" alignment="0" max="32767" attributes="0"/>
+                      <Component id="deviceInfoCheckBox" alignment="0" max="32767" attributes="0"/>
+                      <Component id="deviceLogCheckBox" alignment="0" max="32767" attributes="0"/>
                   </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -270,9 +266,9 @@
                   <Component id="screenRecordCheckBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="deviceInfoCheckBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-                  <Component id="showWindowCheckBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Component id="showWindowCheckBox" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="startLogButton" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -283,18 +279,21 @@
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="Enable Device Log"/>
+            <Property name="toolTipText" type="java.lang.String" value="Record the log from the device."/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="screenRecordCheckBox">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="Enable Screen Record"/>
+            <Property name="toolTipText" type="java.lang.String" value="Record the display of the device while testing. Set the time limit of the record from 0 to 180 seconds."/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="showWindowCheckBox">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="Show Window"/>
+            <Property name="toolTipText" type="java.lang.String" value="Show the windows of each process."/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showWindowCheckBoxActionPerformed"/>
@@ -312,6 +311,7 @@
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="Enable Device Info"/>
+            <Property name="toolTipText" type="java.lang.String" value="Gather the general information of the device."/>
           </Properties>
         </Component>
       </SubComponents>
@@ -335,7 +335,7 @@
                       <Group type="102" attributes="0">
                           <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="screenRecordProgress" max="32767" attributes="0"/>
+                          <Component id="screenRecordProgress" pref="331" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
