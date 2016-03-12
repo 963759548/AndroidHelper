@@ -38,7 +38,7 @@ After the execution all the data will be stored in *transfers* folder. Be aware 
 ![Result Example](/docs/FilesExample.png)
 
 ### Version
-0.9b
+0.9.14b
 
 ### Copyright
 Copyright (c) [Juan Silva](mailto:juanssl@gmail.com) All rights reserved
