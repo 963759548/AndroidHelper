@@ -72,7 +72,7 @@ public class ScreenRecordProcessController extends BaseProcessController {
         // Wait a bit
         controller.enqueueCommand("sleep 2");
         for(int i=1; i<=videoCount; ++i){
-            String pullCommand = ADBConfiguration.getDefaultPullCommand(i);
+            String pullCommand = ADBConfiguration.getDefaultPullScreenRecordCommand(i);
             String rmCommand = ADBConfiguration.getDefaultRemoveCommand(i);
             // Pull File
             controller.enqueueCommand(ADBConfiguration.buildADBCommand(pullCommand));

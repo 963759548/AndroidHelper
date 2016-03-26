@@ -35,15 +35,14 @@ public class ProcessObserver implements IUpdate, IProcessObserver {
     private boolean _wasRunning = false;
     
     public ProcessObserver () {
-        _startListeners = new HashSet<>();
-        _stopListeners = new HashSet<>();
+        _startListeners = new HashSet<IProcessStartListener>();
+        _stopListeners = new HashSet<IProcessStopListener>();
     }
     
     public void setProcess(IProcessStats process) {
         _target = process;
     }
     
-    @Override
     public void Update(long delta) {
         if(_target == null)
             return;
@@ -74,28 +73,24 @@ public class ProcessObserver implements IUpdate, IProcessObserver {
         }
     }
     
-    @Override
     public void subscribeOnStart(IProcessStartListener listener) {
         if(_startListeners.contains(listener))
             return;
         _startListeners.add(listener);
     }
     
-    @Override
     public void subscribeOnStop(IProcessStopListener listener) {
         if(_stopListeners.contains(listener))
             return;
         _stopListeners.add(listener);
     }
     
-    @Override
     public void unsubscribeOnStart(IProcessStartListener listener) {
         if(!_startListeners.contains(listener))
             return;
         _startListeners.remove(listener);
     }
     
-    @Override
     public void unsubscribeOnStop(IProcessStopListener listener) {
         if(!_stopListeners.contains(listener))
             return;

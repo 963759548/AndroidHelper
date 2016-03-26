@@ -31,7 +31,6 @@ public class ProcessLog implements IProcessOutputListener, IProcessLog {
         builder = new StringBuilder();
     }
     
-    @Override
     public synchronized void onNewLine (String line) {
         builder.append(line);
         builder.append("\n");
@@ -43,12 +42,10 @@ public class ProcessLog implements IProcessOutputListener, IProcessLog {
         builder.append("\n");
     }
     
-    @Override
     public String getLog() {
         return builder.toString();
     }
 
-    @Override
     public void clearLog() {
         builder = new StringBuilder();
     }

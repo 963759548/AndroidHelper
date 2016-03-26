@@ -41,13 +41,12 @@ public class CoreLoop implements Runnable, ILooper {
     }
     
     public CoreLoop (boolean sleep, long sleepMilis) {
-        subscribers = new HashSet<>();
+        subscribers = new HashSet<IUpdate>();
         this.sleep = sleep;
         this.targetSleep = sleepMilis;
         createLogger();
     }
     
-    @Override
     public void run () {
         long currentDelta = 0;
         long startDelta = 0;
@@ -70,14 +69,12 @@ public class CoreLoop implements Runnable, ILooper {
         }
     }
     
-    @Override
     public synchronized void subscribe(IUpdate updater) {
         if(subscribers.contains(updater))
             return;
         subscribers.add(updater);
     }
     
-    @Override
     public synchronized void unsubscribe(IUpdate updater) {
         if(!subscribers.contains(updater))
             return;

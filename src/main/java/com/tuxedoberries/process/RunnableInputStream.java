@@ -16,7 +16,6 @@
  */
 package com.tuxedoberries.process;
 
-import com.tuxedoberries.process.interfaces.IProcessStats;
 import com.tuxedoberries.process.interfaces.IProcessOutputListener;
 import com.tuxedoberries.utils.ExceptionHelper;
 import java.io.BufferedReader;
@@ -38,7 +37,6 @@ public class RunnableInputStream implements Runnable, IProcessEventLog {
     private BufferedReader reader;
     private Logger logger;
     private HashSet<IProcessOutputListener> listeners;
-    private IProcessStats stats;
     public boolean printLog;
     private boolean reading = false;
     
@@ -52,13 +50,9 @@ public class RunnableInputStream implements Runnable, IProcessEventLog {
     
     public RunnableInputStream (InputStream stream, boolean print) {
         printLog = print;
-        listeners = new HashSet<>();
+        listeners = new HashSet<IProcessOutputListener>();
         inputStream = stream;
         updateReader (stream);
-    }
-    
-    public void setProcessStats (IProcessStats stats) {
-        this.stats = stats;
     }
     
     public void enableLog(boolean enable) {
@@ -96,7 +90,6 @@ public class RunnableInputStream implements Runnable, IProcessEventLog {
         return line;
     }
     
-    @Override
     public void run () {
         createLogger();
         String line;
@@ -131,14 +124,12 @@ public class RunnableInputStream implements Runnable, IProcessEventLog {
         }
     }
     
-    @Override
     public synchronized void subscribeOutput(IProcessOutputListener listener) {
         if(listeners.contains(listener))
             return;
         listeners.add(listener);
     }
     
-    @Override
     public synchronized void unsubscribeOutput(IProcessOutputListener listener) {
         if(!listeners.contains(listener))
             return;

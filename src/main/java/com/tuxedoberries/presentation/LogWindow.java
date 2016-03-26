@@ -33,7 +33,11 @@ import javax.swing.WindowConstants;
  */
 public class LogWindow extends JFrame implements IProcessOutputListener {
     
-    private static final int WINDOW_WIDTH = 640;
+    /**
+	 * Generated Serial Version UID
+	 */
+	private static final long serialVersionUID = 9011057462682054241L;
+	private static final int WINDOW_WIDTH = 640;
     private static final int WINDOW_HEIGHT = 480;
     private JScrollPane jScrollPane1;
     private JTextArea jTextArea1;
@@ -88,7 +92,6 @@ public class LogWindow extends JFrame implements IProcessOutputListener {
         setLocation(posX, posY);
     }
     
-    @Override
     public void onNewLine(String line) {
         this.jTextArea1.append(line);
         this.jTextArea1.append("\n");

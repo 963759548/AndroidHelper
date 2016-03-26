@@ -34,7 +34,7 @@ public class CommandQueue implements IUpdate, ICommandQueue {
     private Logger logger;
     
     public CommandQueue () {
-        commandQueue = new LinkedList<>();
+        commandQueue = new LinkedList<CommandData>();
         createLogger();
     }
     
@@ -46,7 +46,6 @@ public class CommandQueue implements IUpdate, ICommandQueue {
         this.executor = executor;
     }
     
-    @Override
     public synchronized void clear () {
         commandQueue.clear();
     }
@@ -55,12 +54,10 @@ public class CommandQueue implements IUpdate, ICommandQueue {
         return commandQueue.remove();
     }
     
-    @Override
     public synchronized int queueSize () {
         return commandQueue.size();
     }
     
-    @Override
     public void Update(long delta) {
         if(executor == null)
             return;

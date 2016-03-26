@@ -1,13 +1,20 @@
 # OSX Files
 .DS_Store
-# Project Files
+
+# NetBeans Files
 build
 lib
 manifest.mf
 build.xml
 nbproject
 
+# Eclipse files
+.classpath
+.project
+.settings/
+
 # Runtime Files
 android_helper.config
 transfers
 /dist/
+/target/

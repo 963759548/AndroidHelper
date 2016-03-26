@@ -47,7 +47,12 @@ public class ADBConfiguration {
     /**
      * Default file name for a screen record
      */
-    public static final String DEFAULT_FILENAME = "screen_record_%d.mp4";
+    public static final String DEFAULT_SCREEN_RECORD_FILENAME = "screen_record_%d.mp4";
+    
+    /**
+     * Default file name for a screen capture
+     */
+    public static final String DEFAULT_SCREEN_CAPTURE_FILENAME = "screen_capture_%d.png";
     
     /**
      * Default folder location for a screen record file
@@ -81,24 +86,50 @@ public class ADBConfiguration {
     }
     
     public static String getDefaultScreenRecordName(int number) {
-        return String.format(DEFAULT_FILENAME, number);
+        return String.format(DEFAULT_SCREEN_RECORD_FILENAME, number);
     }
     
-    public static String getDefaultDevicePath (int index) {
+    public static String getDefaultScreenCaptureName() {
+        return getDefaultScreenRecordName(0);
+    }
+    
+    public static String getDefaultScreenCaptureName(int number) {
+        return String.format(DEFAULT_SCREEN_CAPTURE_FILENAME, number);
+    }
+    
+    public static String getDefaultDeviceScreenRecordPath (int index) {
         return DEFAULT_FOLDER_LOCATION.concat(getDefaultScreenRecordName(index));
     }
     
-    public static String getDefaultDevicePath () {
+    public static String getDefaultDeviceScreenRecordPath () {
         return DEFAULT_FOLDER_LOCATION.concat(getDefaultScreenRecordName());
     }
     
-    public static String getDefaultComputerPath (int index) {
+    public static String getDefaultDeviceScreenCapturePath (int index) {
+        return DEFAULT_FOLDER_LOCATION.concat(getDefaultScreenCaptureName(index));
+    }
+    
+    public static String getDefaultDeviceScreenCapturePath () {
+        return DEFAULT_FOLDER_LOCATION.concat(getDefaultScreenCaptureName());
+    }
+    
+    public static String getDefaultScreenRecordComputerPath (int index) {
         Path path = Paths.get(DEFAULT_DESTINATION_FOLDER, getDefaultScreenRecordName(index));
         return path.toString();
     }
     
-    public static String getDefaultComputerPath () {
+    public static String getDefaultScreenRecordComputerPath () {
         Path path = Paths.get(DEFAULT_DESTINATION_FOLDER, getDefaultScreenRecordName());
+        return path.toString();
+    }
+    
+    public static String getDefaultScreenCaptureComputerPath (int index) {
+        Path path = Paths.get(DEFAULT_DESTINATION_FOLDER, getDefaultScreenCaptureName(index));
+        return path.toString();
+    }
+    
+    public static String getDefaultScreenCaptureComputerPath () {
+        Path path = Paths.get(DEFAULT_DESTINATION_FOLDER, getDefaultScreenCaptureName());
         return path.toString();
     }
     
@@ -107,30 +138,46 @@ public class ADBConfiguration {
     }
     
     public static String getDefaultScreenRecordCommand (int index, int seconds) {
-        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, seconds, getDefaultDevicePath(index));
+        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, seconds, getDefaultDeviceScreenRecordPath(index));
     }
     
     public static String getDefaultScreenRecordCommand (int index) {
-        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, 180, getDefaultDevicePath(index));
+        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, 180, getDefaultDeviceScreenRecordPath(index));
     }
     
     public static String getDefaultScreenRecordCommand () {
-        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, 180, getDefaultDevicePath());
+        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, 180, getDefaultDeviceScreenRecordPath());
     }
     
-    public static String getDefaultPullCommand (int index) {
-        return String.format(ADBCommands.PULL_FILE_COMMAND, getDefaultDevicePath(index), getDefaultComputerPath(index));
+    public static String getDefaultScreenCaptureCommand () {
+        return String.format(ADBCommands.SCREEN_CAPTURE_COMMAND, getDefaultDeviceScreenCapturePath());
     }
     
-    public static String getDefaultPullCommand () {
-        return String.format(ADBCommands.PULL_FILE_COMMAND, getDefaultDevicePath(), getDefaultComputerPath());
+    public static String getDefaultScreenCaptureCommand (int index) {
+        return String.format(ADBCommands.SCREEN_CAPTURE_COMMAND, getDefaultDeviceScreenCapturePath(index));
+    }
+    
+    public static String getDefaultPullScreenRecordCommand (int index) {
+        return String.format(ADBCommands.PULL_FILE_COMMAND, getDefaultDeviceScreenRecordPath(index), getDefaultScreenRecordComputerPath(index));
+    }
+    
+    public static String getDefaultPullScreenRecordCommand () {
+        return String.format(ADBCommands.PULL_FILE_COMMAND, getDefaultDeviceScreenRecordPath(), getDefaultScreenRecordComputerPath());
+    }
+    
+    public static String getDefaultPullScreenCaptureCommand (int index) {
+        return String.format(ADBCommands.PULL_FILE_COMMAND, getDefaultDeviceScreenCapturePath(index), getDefaultScreenCaptureComputerPath(index));
+    }
+    
+    public static String getDefaultPullScreenCaptureCommand () {
+        return String.format(ADBCommands.PULL_FILE_COMMAND, getDefaultDeviceScreenCapturePath(), getDefaultScreenCaptureComputerPath());
     }
     
     public static String getDefaultRemoveCommand () {
-        return String.format(ADBCommands.REMOVE_FILE_COMMAND, getDefaultDevicePath());
+        return String.format(ADBCommands.REMOVE_FILE_COMMAND, getDefaultDeviceScreenRecordPath());
     }
     
     public static String getDefaultRemoveCommand (int index) {
-        return String.format(ADBCommands.REMOVE_FILE_COMMAND, getDefaultDevicePath(index));
+        return String.format(ADBCommands.REMOVE_FILE_COMMAND, getDefaultDeviceScreenRecordPath(index));
     }
 }

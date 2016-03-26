@@ -42,11 +42,24 @@ public class ADBCommands {
      * This is the solo command, no arguments.
      */
     public static final String SCREEN_RECORD_SOLO_COMMAND = "screenrecord";
+    
     /**
      * Command to start recording the screen
      * The string needs to be formated with the file location
      */
     public static final String SCREEN_RECORD_COMMAND = "shell screenrecord --time-limit %d --verbose %s";
+    
+    /**
+     * Command to capture the screen.
+     * This is the solo command, no arguments.
+     */
+    public static final String SCREEN_CAPTURE_SOLO_COMMAND = "screencap";
+    
+    /**
+     * Command to take a screenshot of the screen
+     * The string needs to be formated with the file location
+     */
+    public static final String SCREEN_CAPTURE_COMMAND = "shell screencap %s";
     
     /**
      * Command to create a folder in the device

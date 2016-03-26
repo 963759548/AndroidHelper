@@ -30,7 +30,6 @@ public class AndroidHelper {
     public static void main(String[] args) {
         // Open Main Window
         java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
             public void run() {
                 new MainWindow().setVisible(true);
             }

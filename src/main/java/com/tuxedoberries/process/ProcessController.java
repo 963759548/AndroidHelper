@@ -58,12 +58,10 @@ public class ProcessController implements IExecute, IEnqueue {
         MainLoop.start();
     }
     
-    @Override
     public void enqueueCommand(String command) {
         enqueueCommand(command, null);
     }
     
-    @Override
     public void enqueueCommand(String command, String[] env) {
         CommandData data = new CommandData();
         data.command = command;
@@ -71,18 +69,15 @@ public class ProcessController implements IExecute, IEnqueue {
         enqueueCommand(data);
     }
     
-    @Override
     public void enqueueCommand(CommandData data) {
         commandQueue.enqueue(data);
         startQueueThread();
     }
     
-    @Override
     public void execute(String command) {
         execute(command, null);
     }
     
-    @Override
     public void execute(String command, String[] env) {
         CommandData data = new CommandData();
         data.command = command;
@@ -90,7 +85,6 @@ public class ProcessController implements IExecute, IEnqueue {
         execute(data);
     }
     
-    @Override
     public void execute(CommandData data) {
         if(executor.isRunning()) {
             logger.log(Level.WARNING, "Current process is still runnning");
@@ -116,7 +110,6 @@ public class ProcessController implements IExecute, IEnqueue {
     private void startInputThread () {
         if(runnableInput == null) {
             runnableInput = new RunnableInputStream();
-            runnableInput.setProcessStats(executor);
         }
         if(inputThread == null) {
             inputThread = new Thread(runnableInput);
@@ -127,7 +120,6 @@ public class ProcessController implements IExecute, IEnqueue {
     private void startErrorInputThread () {
         if(runnableErrorInput == null) {
             runnableErrorInput = new RunnableInputStream();
-            runnableErrorInput.setProcessStats(executor);
         }
         if(errorInputThread == null) {
             errorInputThread = new Thread(runnableErrorInput);
@@ -160,7 +152,6 @@ public class ProcessController implements IExecute, IEnqueue {
         }
     }
     
-    @Override
     public boolean isRunning () {
         return executor.isRunning() || runnableInput.isReading() || runnableErrorInput.isReading();
     }

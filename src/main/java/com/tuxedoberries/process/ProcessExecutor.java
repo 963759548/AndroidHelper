@@ -39,7 +39,7 @@ public class ProcessExecutor implements IProcessStats {
     private final Stack<String> lastProcess;
     
     public ProcessExecutor () {
-        lastProcess = new Stack<>();
+        lastProcess = new Stack<String>();
     }
     
     public void executeProcess (String command) {
@@ -90,21 +90,18 @@ public class ProcessExecutor implements IProcessStats {
         return outputStream;
     }
     
-    @Override
     public boolean isRunning () {
         if(process == null)
             return false;
         return process.isAlive();
     }
     
-    @Override
     public String getCurrentProcess() {
         if(process == null || !process.isAlive())
             return null;
         return currentProcess;
     }
     
-    @Override
     public String getLastProcess() {
         return lastProcess.peek();
     }
