@@ -46,6 +46,7 @@ public class LogcatProcessController extends BaseProcessController {
 		ProcessController controller = getProcessController();
 		// Clear the Logs
 		ICommand logcatClearCommand = CommandFactory.getInstance().createCommand(CommandType.LogCatClear);
+
 		controller.enqueueCommand(logcatClearCommand.getCommand());
 		// Start Logcat
 		ICommand logcatCommand = CommandFactory.getInstance().createCommand(CommandType.LogCat);

@@ -63,6 +63,7 @@ public class CommandFactory {
 		commandSet.put(CommandType.Pull, new PullCommand());
 		commandSet.put(CommandType.GetProperties, new GetPropertiesCommand());
 		commandSet.put(CommandType.DumpSystem, new DumpSystemCommand());
+		commandSet.put(CommandType.Sleep, new SleepCommand());
 	}
 
 	/**
@@ -81,6 +82,16 @@ public class CommandFactory {
 		return null;
 	}
 
+	public ICommand createCommand(CommandType type, int time) {
+		if (commandSet.containsKey(type)) {
+			ICommandSleep command = (ICommandSleep) commandSet.get(type);
+			command.setSleepTime(time);
+			return command;
+		}
+
+		return null;
+	}
+
 	public ICommand createCommand(CommandType type, String path) {
 		if (commandSet.containsKey(type)) {
 			ICommandPath command = (ICommandPath) commandSet.get(type);
@@ -90,7 +101,7 @@ public class CommandFactory {
 
 		return null;
 	}
-	
+
 	public ICommand createCommand(CommandType type, String path, int seconds, int bitRate) {
 		if (commandSet.containsKey(type)) {
 			ICommandRecord command = (ICommandRecord) commandSet.get(type);

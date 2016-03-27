@@ -33,6 +33,12 @@ public class ScreenRecordProcessController extends BaseProcessController {
 	private static final String WINDOW_TITLE = "adb shell screenrecord";
 	private static final String LOG_FILENAME = "Screen Record Log.txt";
 	private int videoCount = 0;
+	private ICommand sleepCommand;
+
+	public ScreenRecordProcessController() {
+		super();
+		sleepCommand = CommandFactory.getInstance().createCommand(CommandType.Sleep, 2);
+	}
 
 	@Override
 	protected String getWindowTitle() {
@@ -56,11 +62,12 @@ public class ScreenRecordProcessController extends BaseProcessController {
 		for (int i = 1; i <= 20; ++i) {
 			String targetFile = ADBConfiguration.getDefaultDeviceScreenRecordPath(i);
 			// Execute Record
-			ICommand recordCommand = CommandFactory.getInstance().createCommand(CommandType.ScreenRecord, targetFile, ADBConfiguration.currentRecordTime, ADBConfiguration.currentBitRate);
+			ICommand recordCommand = CommandFactory.getInstance().createCommand(CommandType.ScreenRecord, targetFile,
+					ADBConfiguration.currentRecordTime, ADBConfiguration.currentBitRate);
 			controller.enqueueCommand(recordCommand.getCommand());
 
 			// Wait a bit for process to properly finish
-			controller.enqueueCommand("sleep 2");
+			controller.enqueueCommand(sleepCommand.getCommand());
 		}
 	}
 
@@ -75,7 +82,8 @@ public class ScreenRecordProcessController extends BaseProcessController {
 		}
 
 		// Wait a bit
-		controller.enqueueCommand("sleep 2");
+
+		controller.enqueueCommand(sleepCommand.getCommand());
 		for (int i = 1; i <= videoCount; ++i) {
 			String sourcePath = ADBConfiguration.getDefaultDeviceScreenRecordPath(i);
 			String destinationPath = ADBConfiguration.getDefaultScreenRecordComputerPath(i);
@@ -84,13 +92,13 @@ public class ScreenRecordProcessController extends BaseProcessController {
 			ICommand pullCommand = CommandFactory.getInstance().createCommand(CommandType.Pull, sourcePath,
 					destinationPath);
 			controller.enqueueCommand(pullCommand.getCommand());
-			
+
 			// Remove file
 			ICommand removeCommand = CommandFactory.getInstance().createCommand(CommandType.RemoveFile, sourcePath);
 			controller.enqueueCommand(removeCommand.getCommand());
-			
+
 			// Wait a bit
-			controller.enqueueCommand("sleep 2");
+			controller.enqueueCommand(sleepCommand.getCommand());
 		}
 	}
 

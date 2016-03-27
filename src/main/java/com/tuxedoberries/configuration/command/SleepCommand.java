@@ -17,34 +17,39 @@
 package com.tuxedoberries.configuration.command;
 
 /**
-*
-* @author Juan Silva
-*/
-public enum CommandType {
-	
-	StartServer,
-	
-	DeviceList,
-	
-	LogCat,
-	
-	LogCatClear,
-	
-	ScreenCapture,
-	
-	ScreenRecord,
-	
-	MakeDirectory,
-	
-	RemoveFile,
-	
-	RemoveFolder,
-	
-	GetProperties,
-	
-	DumpSystem,
-	
-	Pull,
-	
-	Sleep
+ *
+ * @author Juan Silva
+ */
+public class SleepCommand implements ICommandSleep {
+
+	public static final String SLEEP_COMMAND = "sleep";
+
+	private int seconds;
+
+	/**
+	 * Get the type of this command
+	 * 
+	 * @return Type of this command
+	 */
+	public CommandType getType() {
+		return CommandType.Sleep;
+	}
+
+	/**
+	 * Set the sleep time
+	 * 
+	 * @param time
+	 */
+	public void setSleepTime(int time) {
+		this.seconds = time;
+	}
+
+	/**
+	 * Get the full string command
+	 * 
+	 * @return full command as string
+	 */
+	public String getCommand() {
+		return String.format("%s %d", SLEEP_COMMAND, seconds);
+	}
 }

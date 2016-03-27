@@ -20,31 +20,12 @@ package com.tuxedoberries.configuration.command;
 *
 * @author Juan Silva
 */
-public enum CommandType {
-	
-	StartServer,
-	
-	DeviceList,
-	
-	LogCat,
-	
-	LogCatClear,
-	
-	ScreenCapture,
-	
-	ScreenRecord,
-	
-	MakeDirectory,
-	
-	RemoveFile,
-	
-	RemoveFolder,
-	
-	GetProperties,
-	
-	DumpSystem,
-	
-	Pull,
-	
-	Sleep
+public interface ICommandSleep extends ICommand {
+
+	/**
+	 * Set the sleep time
+	 * 
+	 * @param time
+	 */
+	public void setSleepTime(int time);
 }
