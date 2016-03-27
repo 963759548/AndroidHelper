@@ -50,6 +50,11 @@ public class ADBConfiguration {
     public static final int MAX_RECORD_TIME = 180;
     
     /**
+     * Max Bit Rate
+     */
+    public static final int MAX_RECORD_BIT_RATE = 10000000;
+    
+    /**
      * Default file name for a screen record
      */
     public static final String DEFAULT_SCREEN_RECORD_FILENAME = "screen_record_%d.mp4";
