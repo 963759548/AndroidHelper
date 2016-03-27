@@ -20,8 +20,8 @@ import com.tuxedoberries.androidhelper.DeviceInformationProcessController;
 import com.tuxedoberries.androidhelper.LogcatProcessController;
 import com.tuxedoberries.androidhelper.ScreenCaptureProcessController;
 import com.tuxedoberries.androidhelper.ScreenRecordProcessController;
-import com.tuxedoberries.configuration.ADBCommands;
 import com.tuxedoberries.configuration.ADBConfiguration;
+import com.tuxedoberries.configuration.command.ScreenRecordCommand;
 import com.tuxedoberries.mainloop.IUpdate;
 import com.tuxedoberries.mainloop.MainLoop;
 import com.tuxedoberries.process.interfaces.IProcessStartListener;
@@ -527,7 +527,7 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
     }
 
     public void onProcessStarted(String command) {
-        if(command.contains(ADBCommands.SCREEN_RECORD_SOLO_COMMAND)){
+        if(command.contains(ScreenRecordCommand.SCREEN_RECORD_COMMAND)){
             screenRunning = true;
             startedMilis = System.currentTimeMillis();
             MainLoop.getLooper().subscribe(this);
@@ -536,7 +536,7 @@ public class MainWindow extends javax.swing.JFrame implements IProcessStartListe
     }
     
     public void onProcessStopped(String process) {
-        if(process.contains(ADBCommands.SCREEN_RECORD_SOLO_COMMAND)){
+        if(process.contains(ScreenRecordCommand.SCREEN_RECORD_COMMAND)){
             screenRunning = false;
             startedMilis = System.currentTimeMillis();
         }

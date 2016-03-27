@@ -35,6 +35,11 @@ public class ADBConfiguration {
     public static String adbPath = "adb";
     
     /**
+     * Current Video Rate
+     */
+    public static int currentBitRate = 4000000;
+    
+    /**
      * Current configured record time
      */
     public static int currentRecordTime = 180;
@@ -54,15 +59,16 @@ public class ADBConfiguration {
      */
     public static final String DEFAULT_SCREEN_CAPTURE_FILENAME = "screen_capture_%d.png";
     
-    /**
-     * Default folder location for a screen record file
-     */
-    public static final String DEFAULT_FOLDER_LOCATION = "/sdcard/tmp/";
-    
-    /**
-     * Computer default destination folder
-     */
-    public static final String DEFAULT_DESTINATION_FOLDER = "transfers";
+	/**
+	 * Default folder location for a screen record file
+	 */
+	public static final String DEFAULT_SOURCE_FOLDER = "/sdcard/tmp";
+
+	/**
+	 * Computer default destination folder
+	 */
+	public static final String DEFAULT_DESTINATION_FOLDER = "transfers";
+	
     
     public static void loadConfiguration () {
         FileReader reader = new FileReader();
@@ -98,19 +104,19 @@ public class ADBConfiguration {
     }
     
     public static String getDefaultDeviceScreenRecordPath (int index) {
-        return DEFAULT_FOLDER_LOCATION.concat(getDefaultScreenRecordName(index));
+        return String.format("%s/%s", DEFAULT_SOURCE_FOLDER, getDefaultScreenRecordName(index));
     }
     
     public static String getDefaultDeviceScreenRecordPath () {
-        return DEFAULT_FOLDER_LOCATION.concat(getDefaultScreenRecordName());
+    	return String.format("%s/%s", DEFAULT_SOURCE_FOLDER, getDefaultScreenRecordName());
     }
     
     public static String getDefaultDeviceScreenCapturePath (int index) {
-        return DEFAULT_FOLDER_LOCATION.concat(getDefaultScreenCaptureName(index));
+    	return String.format("%s/%s", DEFAULT_SOURCE_FOLDER, getDefaultScreenCaptureName(index));
     }
     
     public static String getDefaultDeviceScreenCapturePath () {
-        return DEFAULT_FOLDER_LOCATION.concat(getDefaultScreenCaptureName());
+    	return String.format("%s/%s", DEFAULT_SOURCE_FOLDER, getDefaultScreenCaptureName());
     }
     
     public static String getDefaultScreenRecordComputerPath (int index) {
@@ -133,51 +139,4 @@ public class ADBConfiguration {
         return path.toString();
     }
     
-    public static String buildADBCommand (String command) {
-        return adbPath.concat(" ").concat(command);
-    }
-    
-    public static String getDefaultScreenRecordCommand (int index, int seconds) {
-        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, seconds, getDefaultDeviceScreenRecordPath(index));
-    }
-    
-    public static String getDefaultScreenRecordCommand (int index) {
-        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, 180, getDefaultDeviceScreenRecordPath(index));
-    }
-    
-    public static String getDefaultScreenRecordCommand () {
-        return String.format(ADBCommands.SCREEN_RECORD_COMMAND, 180, getDefaultDeviceScreenRecordPath());
-    }
-    
-    public static String getDefaultScreenCaptureCommand () {
-        return String.format(ADBCommands.SCREEN_CAPTURE_COMMAND, getDefaultDeviceScreenCapturePath());
-    }
-    
-    public static String getDefaultScreenCaptureCommand (int index) {
-        return String.format(ADBCommands.SCREEN_CAPTURE_COMMAND, getDefaultDeviceScreenCapturePath(index));
-    }
-    
-    public static String getDefaultPullScreenRecordCommand (int index) {
-        return String.format(ADBCommands.PULL_FILE_COMMAND, getDefaultDeviceScreenRecordPath(index), getDefaultScreenRecordComputerPath(index));
-    }
-    
-    public static String getDefaultPullScreenRecordCommand () {
-        return String.format(ADBCommands.PULL_FILE_COMMAND, getDefaultDeviceScreenRecordPath(), getDefaultScreenRecordComputerPath());
-    }
-    
-    public static String getDefaultPullScreenCaptureCommand (int index) {
-        return String.format(ADBCommands.PULL_FILE_COMMAND, getDefaultDeviceScreenCapturePath(index), getDefaultScreenCaptureComputerPath(index));
-    }
-    
-    public static String getDefaultPullScreenCaptureCommand () {
-        return String.format(ADBCommands.PULL_FILE_COMMAND, getDefaultDeviceScreenCapturePath(), getDefaultScreenCaptureComputerPath());
-    }
-    
-    public static String getDefaultRemoveCommand () {
-        return String.format(ADBCommands.REMOVE_FILE_COMMAND, getDefaultDeviceScreenRecordPath());
-    }
-    
-    public static String getDefaultRemoveCommand (int index) {
-        return String.format(ADBCommands.REMOVE_FILE_COMMAND, getDefaultDeviceScreenRecordPath(index));
-    }
 }

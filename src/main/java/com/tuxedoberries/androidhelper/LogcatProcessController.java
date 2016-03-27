@@ -16,8 +16,9 @@
  */
 package com.tuxedoberries.androidhelper;
 
-import com.tuxedoberries.configuration.ADBCommands;
-import com.tuxedoberries.configuration.ADBConfiguration;
+import com.tuxedoberries.configuration.command.CommandFactory;
+import com.tuxedoberries.configuration.command.CommandType;
+import com.tuxedoberries.configuration.command.ICommand;
 import com.tuxedoberries.process.ProcessController;
 
 /**
@@ -26,34 +27,35 @@ import com.tuxedoberries.process.ProcessController;
  */
 public class LogcatProcessController extends BaseProcessController {
 
-    private static final String WINDOW_TITLE = "adb logcat";
-    private static final String LOG_FILENAME = "Device Log.txt";
-    
-    @Override
-    protected String getWindowTitle() {
-        return WINDOW_TITLE;
-    }
+	private static final String WINDOW_TITLE = "adb logcat";
+	private static final String LOG_FILENAME = "Device Log.txt";
 
-    @Override
-    protected String getLogFileName() {
-        return LOG_FILENAME;
-    }
+	@Override
+	protected String getWindowTitle() {
+		return WINDOW_TITLE;
+	}
 
-    @Override
-    protected void doStartProcess() {
-        String command = ADBConfiguration.buildADBCommand(ADBCommands.LOGCAT_COMMAND);
-        
-        ProcessController controller = getProcessController();
-        // Clear the Logs
-        controller.enqueueCommand(command.concat(" -c"));
-        // Start Logcat
-        controller.enqueueCommand(command);
-    }
+	@Override
+	protected String getLogFileName() {
+		return LOG_FILENAME;
+	}
 
-    @Override
-    protected void doStopProcess() {
-        ProcessController controller = getProcessController();
-        controller.stop();
-    }
-    
+	@Override
+	protected void doStartProcess() {
+
+		ProcessController controller = getProcessController();
+		// Clear the Logs
+		ICommand logcatClearCommand = CommandFactory.getInstance().createCommand(CommandType.LogCatClear);
+		controller.enqueueCommand(logcatClearCommand.getCommand());
+		// Start Logcat
+		ICommand logcatCommand = CommandFactory.getInstance().createCommand(CommandType.LogCat);
+		controller.enqueueCommand(logcatCommand.getCommand());
+	}
+
+	@Override
+	protected void doStopProcess() {
+		ProcessController controller = getProcessController();
+		controller.stop();
+	}
+
 }

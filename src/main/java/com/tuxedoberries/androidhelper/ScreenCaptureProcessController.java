@@ -16,8 +16,10 @@
  */
 package com.tuxedoberries.androidhelper;
 
-import com.tuxedoberries.configuration.ADBCommands;
 import com.tuxedoberries.configuration.ADBConfiguration;
+import com.tuxedoberries.configuration.command.CommandFactory;
+import com.tuxedoberries.configuration.command.CommandType;
+import com.tuxedoberries.configuration.command.ICommand;
 import com.tuxedoberries.process.ProcessController;
 
 /**
@@ -45,16 +47,24 @@ public class ScreenCaptureProcessController extends BaseProcessController {
         ProcessController controller = getProcessController();
         
         // Create Containing Folder
-        String createFolderCommand = String.format(ADBCommands.CREATE_FOLDER, ADBConfiguration.DEFAULT_FOLDER_LOCATION);
-        controller.enqueueCommand(ADBConfiguration.buildADBCommand(createFolderCommand));
+		ICommand makeDirectory = CommandFactory.getInstance().createCommand(CommandType.MakeDirectory,
+				ADBConfiguration.DEFAULT_SOURCE_FOLDER);
+        controller.enqueueCommand(makeDirectory.getCommand());
         
         // Capture the screenshot
-        String captureCommand = ADBConfiguration.getDefaultScreenCaptureCommand(screenCaptureCount);
-        controller.enqueueCommand(ADBConfiguration.buildADBCommand(captureCommand));
+        String sourcePath = ADBConfiguration.getDefaultDeviceScreenCapturePath(screenCaptureCount);
+        ICommand screenCaptureCommand = CommandFactory.getInstance().createCommand(CommandType.ScreenCapture, sourcePath);
+        controller.enqueueCommand(screenCaptureCommand.getCommand());
      
         // Pull the file
-        String pullCommand = ADBConfiguration.getDefaultPullScreenCaptureCommand(screenCaptureCount);
-        controller.enqueueCommand(ADBConfiguration.buildADBCommand(pullCommand));
+    	String destinationPath = ADBConfiguration.getDefaultScreenCaptureComputerPath(screenCaptureCount);
+    	ICommand pullCommand = CommandFactory.getInstance().createCommand(CommandType.Pull, sourcePath, destinationPath);
+        controller.enqueueCommand(pullCommand.getCommand());
+        
+        // Remove the file
+        ICommand removeCommand = CommandFactory.getInstance().createCommand(CommandType.RemoveFile, sourcePath);
+        controller.enqueueCommand(removeCommand.getCommand());
+        
         ++screenCaptureCount;
     }
 

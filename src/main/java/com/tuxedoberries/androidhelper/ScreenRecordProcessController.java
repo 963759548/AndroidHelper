@@ -16,8 +16,11 @@
  */
 package com.tuxedoberries.androidhelper;
 
-import com.tuxedoberries.configuration.ADBCommands;
 import com.tuxedoberries.configuration.ADBConfiguration;
+import com.tuxedoberries.configuration.command.CommandFactory;
+import com.tuxedoberries.configuration.command.CommandType;
+import com.tuxedoberries.configuration.command.ICommand;
+import com.tuxedoberries.configuration.command.ScreenRecordCommand;
 import com.tuxedoberries.presentation.LogWindow;
 import com.tuxedoberries.process.ProcessController;
 
@@ -27,76 +30,80 @@ import com.tuxedoberries.process.ProcessController;
  */
 public class ScreenRecordProcessController extends BaseProcessController {
 
-    private static final String WINDOW_TITLE = "adb shell screenrecord";
-    private static final String LOG_FILENAME = "Screen Record Log.txt";
-    private int videoCount = 0;
-    
-    @Override
-    protected String getWindowTitle() {
-        return WINDOW_TITLE;
-    }
+	private static final String WINDOW_TITLE = "adb shell screenrecord";
+	private static final String LOG_FILENAME = "Screen Record Log.txt";
+	private int videoCount = 0;
 
-    @Override
-    protected String getLogFileName() {
-        return LOG_FILENAME;
-    }
+	@Override
+	protected String getWindowTitle() {
+		return WINDOW_TITLE;
+	}
 
-    @Override
-    protected void doStartProcess() {
-        String createFolder = String.format(ADBCommands.CREATE_FOLDER, ADBConfiguration.DEFAULT_FOLDER_LOCATION);
-        // Reset
-        videoCount = 0;
-        
-        ProcessController controller = getProcessController();
-        // Create Containing Folder
-        controller.execute(ADBConfiguration.buildADBCommand(createFolder));
-        for(int i=1; i<=20; ++i) {
-            String command = ADBConfiguration.getDefaultScreenRecordCommand(i, ADBConfiguration.currentRecordTime);
-            // Execute Record
-            controller.enqueueCommand(ADBConfiguration.buildADBCommand(command));
-            // Wait a bit for process to properly finish
-            controller.enqueueCommand("sleep 2");
-        }
-    }
+	@Override
+	protected String getLogFileName() {
+		return LOG_FILENAME;
+	}
 
-    @Override
-    protected void doStopProcess() {
-        ProcessController controller = getProcessController();
-        
-        // Clear the queue
-        controller.getQueue().clear();
-        if(logWindow != null){
-            logWindow.onNewLine("Waiting for record to stop");
-        }
+	@Override
+	protected void doStartProcess() {
+		ProcessController controller = getProcessController();
+		videoCount = 0;
 
-        // Wait a bit
-        controller.enqueueCommand("sleep 2");
-        for(int i=1; i<=videoCount; ++i){
-            String pullCommand = ADBConfiguration.getDefaultPullScreenRecordCommand(i);
-            String rmCommand = ADBConfiguration.getDefaultRemoveCommand(i);
-            // Pull File
-            controller.enqueueCommand(ADBConfiguration.buildADBCommand(pullCommand));
-            // Remove file
-            controller.enqueueCommand(ADBConfiguration.buildADBCommand(rmCommand));
-            // Wait a bit
-            controller.enqueueCommand("sleep 2");
-        }
-        
-        // Delete Temp Folder
-        String deleteFolder = String.format(ADBCommands.DELETE_FOLDER, ADBConfiguration.DEFAULT_FOLDER_LOCATION);
-        controller.enqueueCommand(ADBConfiguration.buildADBCommand(deleteFolder));
-    }
-    
-    @Override
-    protected void processStartedProcess (String process) {
-        if(process.contains(ADBCommands.SCREEN_RECORD_SOLO_COMMAND)){
-            videoCount++;
-        }
-    }
-    
-    @Override
-    protected void processLogWindow(LogWindow logWindow) {
-        logWindow.setSize(640, 250);
-        logWindow.setLocation(logWindow.getLocation().x, 480);
-    }
+		// Create Containing Folder
+		ICommand makeDirectory = CommandFactory.getInstance().createCommand(CommandType.MakeDirectory,
+				ADBConfiguration.DEFAULT_SOURCE_FOLDER);
+		controller.execute(makeDirectory.getCommand());
+		for (int i = 1; i <= 20; ++i) {
+			String targetFile = ADBConfiguration.getDefaultDeviceScreenRecordPath(i);
+			// Execute Record
+			ICommand recordCommand = CommandFactory.getInstance().createCommand(CommandType.ScreenRecord, targetFile, ADBConfiguration.currentRecordTime, ADBConfiguration.currentBitRate);
+			controller.enqueueCommand(recordCommand.getCommand());
+
+			// Wait a bit for process to properly finish
+			controller.enqueueCommand("sleep 2");
+		}
+	}
+
+	@Override
+	protected void doStopProcess() {
+		ProcessController controller = getProcessController();
+
+		// Clear the queue
+		controller.getQueue().clear();
+		if (logWindow != null) {
+			logWindow.onNewLine("Waiting for record to stop");
+		}
+
+		// Wait a bit
+		controller.enqueueCommand("sleep 2");
+		for (int i = 1; i <= videoCount; ++i) {
+			String sourcePath = ADBConfiguration.getDefaultDeviceScreenRecordPath(i);
+			String destinationPath = ADBConfiguration.getDefaultScreenRecordComputerPath(i);
+
+			// Pull File
+			ICommand pullCommand = CommandFactory.getInstance().createCommand(CommandType.Pull, sourcePath,
+					destinationPath);
+			controller.enqueueCommand(pullCommand.getCommand());
+			
+			// Remove file
+			ICommand removeCommand = CommandFactory.getInstance().createCommand(CommandType.RemoveFile, sourcePath);
+			controller.enqueueCommand(removeCommand.getCommand());
+			
+			// Wait a bit
+			controller.enqueueCommand("sleep 2");
+		}
+	}
+
+	@Override
+	protected void processStartedProcess(String process) {
+		if (process.contains(ScreenRecordCommand.SCREEN_RECORD_COMMAND)) {
+			videoCount++;
+		}
+	}
+
+	@Override
+	protected void processLogWindow(LogWindow logWindow) {
+		logWindow.setSize(640, 250);
+		logWindow.setLocation(logWindow.getLocation().x, 480);
+	}
 }
